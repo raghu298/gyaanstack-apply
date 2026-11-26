@@ -51,6 +51,7 @@ const stored = async () => (await loadSettings()).announcementFeed;
 
 beforeEach(async () => {
   config.GYAANSTACK_API_URL = undefined;
+  vi.stubEnv("GYAANSTACK_ANNOUNCEMENTS", "on"); // off by default in GyaanStack Apply
   log.mockClear();
   await resetDatabase(prisma());
 });

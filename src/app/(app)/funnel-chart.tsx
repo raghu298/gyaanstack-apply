@@ -323,6 +323,8 @@ export function FunnelChart({ funnel }: { funnel: readonly FunnelStep[] }) {
           </div>
         </div>
       </div>
+      {/* On a phone the picture is wider than the card; say so. */}
+      <p className="-mt-3 text-meta text-muted md:hidden">Swipe sideways to see every stage.</p>
 
       <div className="flex flex-wrap items-start gap-x-6 gap-y-1">
         <details className="text-meta text-muted">

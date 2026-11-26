@@ -144,7 +144,6 @@ if (!DRY && process.env.GYAANSTACK_JSEARCH_KEY) {
 // Second source: freehire.me (Naukri, Hirist and more), free and no key. Only postings that
 // give an email to apply to are drafted, since the rest need a browser.
 const FREEHIRE_QUERIES = ["genai", "generative ai", "llm", "agentic", "java ai"];
-const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
 /** Too junior, or not a permanent job. */
 function wrongKind(text: string): boolean {
   if (/part[- ]time|short[- ]term|freelance|internship|contract (role|position|basis)/i.test(text.slice(0, 1500))) return true;

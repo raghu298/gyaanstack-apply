@@ -145,7 +145,7 @@ function Funnel({ figures }: { figures: DashboardFigures }) {
 
 function Figure({ value, label }: { value: string; label: string }) {
   return (
-    <div className="flex flex-col-reverse gap-0.5">
+    <div className="flex flex-col-reverse justify-end gap-0.5">
       <dt className="text-label text-muted">{label}</dt>
       <dd className="font-serif text-[32px] leading-none tabular-nums">{value}</dd>
     </div>

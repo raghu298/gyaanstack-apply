@@ -305,7 +305,7 @@ describe("the review (E31-3)", () => {
     await userEvent.type(screen.getByLabelText("Company"), "Ledgerly B.V.");
     await userEvent.type(screen.getByLabelText("Apply by"), "2026-10-15");
     await userEvent.click(readOut.getByRole("button", { name: "Done" }));
-    expect(screen.getByRole("heading", { level: 1, name: "Designer at Ledgerly B.V." })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "Designer at Ledgerly B.V." })).toBeInTheDocument();
   });
 
   it("fills the Fit column from the reading: coverage, each requirement, and the score folded away", async () => {
@@ -547,7 +547,7 @@ describe("keeping the draft (E7-7)", () => {
     await userEvent.click(screen.getByRole("link", { name: "New" }));
     await userEvent.click(screen.getByRole("button", { name: "Read the posting" }));
     expect(startReadingPosting).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("heading", { level: 1, name: "Designer at Ledgerly B.V." })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "Designer at Ledgerly B.V." })).toBeInTheDocument();
     // A changed posting is read again.
     await userEvent.click(screen.getByRole("link", { name: "New" }));
     await userEvent.type(screen.getByLabelText("Job posting"), " Apply now.");
