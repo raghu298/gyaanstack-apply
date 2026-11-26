@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GyaanStack Apply: a self-hosted AI job-application copilot</title>
+<meta name="description" content="Keep one profile and get a resume and cover letter written for each job, from facts you entered. Self-hosted, with the AI model you choose. Free under the AGPL.">
+<link rel="canonical" href="https://apply.gyaanstack.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GyaanStack">
+<meta property="og:title" content="GyaanStack Apply: a self-hosted AI job-application copilot">
+<meta property="og:description" content="One profile, a tailored resume and cover letter for every job, and a daily run that finds GenAI roles for you. Runs on your own computer.">
+<meta property="og:url" content="https://apply.gyaanstack.com/">
+<meta property="og:image" content="https://apply.gyaanstack.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0a192f" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("gsa-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="stylesheet" href="/style.css?v=3">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap top-in">
+  <a class="brand" href="/" aria-label="GyaanStack Apply home"><img src="/favicon.svg" alt="" width="30" height="30"><span class="brand-name">GyaanStack <em>Apply</em></span></a>
+  <nav aria-label="Main">
+    <a href="#how">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#privacy">Privacy</a>
+    <a href="#install">Install</a>
+    <a href="#setup">Set up for you</a>
+  </nav>
+  <div class="top-right">
+    <button class="theme-btn" type="button" aria-label="Switch colour theme" title="Switch colour theme">
+      <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <a class="btn btn-line btn-sm hide-phone" href="https://github.com/raghu298/gyaanstack-apply"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5a3.9 3.9 0 0 1 1-2.7c-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.7 9.7 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7a3.9 3.9 0 0 1 1 2.7c0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.8V21c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/></svg>GitHub</a>
+    <a class="btn btn-main btn-sm show-phone" href="https://github.com/raghu298/gyaanstack-apply/releases/latest">Download</a>
+    <details class="menu show-phone"><summary aria-label="Menu"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
+      <div class="menu-list">
+        <a href="#how">How it works</a><a href="#features">Features</a><a href="#privacy">Privacy</a><a href="#install">Install</a><a href="#setup">Set up for you</a><a href="https://github.com/raghu298/gyaanstack-apply">GitHub</a><a href="https://buymeacoffee.com/aigyaanstack">Buy me a coffee</a>
+      </div>
+    </details>
+  </div>
+</div></header>
+
+<main id="main">
+<section class="hero"><div class="wrap hero-in">
+  <a class="ver" href="https://github.com/raghu298/gyaanstack-apply/releases/latest"><i aria-hidden="true"></i>Version 1.1: now on phones<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  <h1>Every application,<br><em>written for the job.</em></h1>
+  <p class="sub">Keep your career history in one profile. Paste a posting and GyaanStack Apply writes a resume and cover letter for it, using only what the profile holds, then tracks the application until you hear back. It runs on your computer, with the AI model you choose.</p>
+  <div class="btns hero-btns">
+    <a class="btn btn-main btn-lg" href="https://github.com/raghu298/gyaanstack-apply/releases/latest"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download the desktop app</a>
+    <a class="btn btn-line btn-lg" href="#install">Run it from source<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </div>
+  <p class="note">Free for Windows and Linux. Mac: run it from source.</p>
+</div></section>
+
+<section class="show-wrap" aria-labelledby="show-h"><div class="wrap">
+  <div class="show">
+    <div class="show-text">
+      <p class="eyebrow">Inside the app</p>
+      <h2 id="show-h">See where every application <em>stands.</em></h2>
+      <p>The board follows each job from draft to offer. The dashboard shows how far your applications get. Each tailored resume sits next to the posting it was written for.</p>
+      <div class="tabs" role="tablist" aria-label="Screens">
+        <button type="button" role="tab" aria-selected="true" data-shot="board">Board</button>
+        <button type="button" role="tab" aria-selected="false" data-shot="dashboard">Dashboard</button>
+        <button type="button" role="tab" aria-selected="false" data-shot="resume">Tailored resume</button>
+      </div>
+      <p class="show-small">Screens from the built-in demo data. The people and companies in it are made up.</p>
+    </div>
+    <div class="show-media">
+      <div class="frame">
+        <div class="frame-bar" aria-hidden="true"><span></span><span></span><span></span><b>localhost:3000</b></div>
+        <div class="shots">
+          <div class="shot is-on" data-shot="board">
+            <img class="only-light" src="/img/app-board-light.jpg" width="1600" height="1204" alt="The applications board with columns from draft to offer" loading="lazy">
+            <img class="only-dark" src="/img/app-board-dark.jpg" width="1600" height="1204" alt="The applications board with columns from draft to offer" loading="lazy">
+          </div>
+          <div class="shot" data-shot="dashboard">
+            <img class="only-light" src="/img/app-dashboard-light.jpg" width="1600" height="1204" alt="The dashboard with a funnel from sent to offer" loading="lazy">
+            <img class="only-dark" src="/img/app-dashboard-dark.jpg" width="1600" height="1204" alt="The dashboard with a funnel from sent to offer" loading="lazy">
+          </div>
+          <div class="shot" data-shot="resume">
+            <img class="only-light" src="/img/app-resume-light.jpg" width="1600" height="996" alt="A tailored resume for one application, with its checklist" loading="lazy">
+            <img class="only-dark" src="/img/app-resume-dark.jpg" width="1600" height="996" alt="A tailored resume for one application, with its checklist" loading="lazy">
+          </div>
+        </div>
+      </div>
+      <div class="float-card" aria-hidden="true">
+        <b>4 of 5 covered</b>
+        <div class="meter"><i></i></div>
+        <span class="ok">Python, 5+ years</span>
+        <span class="ok">RAG in production</span>
+        <span class="gap">Kubernetes: shown as a gap</span>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<div class="models"><div class="wrap models-in">
+  <strong>Works with the model you choose</strong>
+  <span class="pill">Ollama</span><span class="pill">LM Studio</span><span class="pill">Anthropic</span><span class="pill">Mistral</span><span class="pill">Any OpenAI-compatible API</span>
+</div></div>
+
+<section id="how"><div class="wrap">
+  <p class="eyebrow">How it works</p>
+  <h2>From a job posting to a sent application in four steps.</h2>
+  <p class="lead">You write your background once. After that, each new job takes a paste and a review.</p>
+  <ol class="steps">
+    <li class="card"><h3>Build your profile</h3><p>Add experience, projects, skills, education and certifications. You can import an existing resume (PDF, Word or Markdown) to fill it in faster.</p></li>
+    <li class="card"><h3>Paste a posting</h3><p>The app reads the job description, lists its requirements and checks each one against your profile.</p></li>
+    <li class="card"><h3>Review the drafts</h3><p>You get a resume and cover letter for that job. Change them in a chat, edit any part by hand, or roll back to an earlier version.</p></li>
+    <li class="card"><h3>Send and track</h3><p>Download the PDFs or send from Gmail. Each application moves across a board from draft to offer.</p></li>
+  </ol>
+</div></section>
+
+<section><div class="wrap split">
+  <div>
+    <p class="eyebrow">Honest drafts</p>
+    <h2>It writes from your profile and nothing else.</h2>
+    <p class="muted">When a posting asks for a skill you have not listed, the app marks it as a gap. It does not add the skill to your resume. You can fill the gap in your profile if it is true, and every later application can use it.</p>
+    <ul class="ticks">
+      <li>Every AI edit can be undone, and each document keeps its versions.</li>
+      <li>Nothing is sent or deleted until you confirm it.</li>
+      <li>Requirements show where in your profile they were found.</li>
+    </ul>
+  </div>
+  <div class="card match" aria-label="Example: how a profile matches a posting">
+    <div class="match-head"><b>How Asha matches this posting</b><span class="muted" style="font-size:13.5px">4 of 5 covered</span></div>
+    <div class="meter"><i></i></div>
+    <div class="req"><span class="mk">✓</span><b>5+ years building with Python</b><small>Two roles in the profile, since 2019</small></div>
+    <div class="req"><span class="mk">✓</span><b>Shipped a RAG system to production</b><small>Support search project, 2024</small></div>
+    <div class="req"><span class="mk">✓</span><b>LLM evaluation and guardrails</b><small>Listed under skills and one project</small></div>
+    <div class="req"><span class="mk">✓</span><b>Agent frameworks such as LangGraph</b><small>Internal triage agent, 2025</small></div>
+    <div class="req gap"><span class="mk">!</span><b>Kubernetes in production</b><small>Not in the profile yet</small><span class="add">+ Add to profile</span></div>
+    <p class="say">The cover letter covers the Kubernetes gap honestly instead of claiming experience Asha does not have.</p>
+  </div>
+</div></section>
+
+<section id="features"><div class="wrap">
+  <p class="eyebrow">Features</p>
+  <h2>The whole job search in one app.</h2>
+  <p class="lead">Searching, writing, sending, replies and interviews all sit next to each application.</p>
+  <div class="grid">
+    <article class="card feat">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+      <h3>Find jobs</h3><p>Search JSearch (LinkedIn, Indeed and more), Adzuna and FreeHire from one screen, plus startups that are hiring from YC and Hacker News.</p></article>
+    <article class="card feat">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3"/></svg></div>
+      <h3>Job agent</h3><p>Runs your saved searches once a day, scores new postings against your profile and can prepare drafts for you to review.</p></article>
+    <article class="card feat">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
+      <h3>Gmail and Calendar</h3><p>Optional. Send each application with a short email from your own address, see replies on the application, and keep interviews in your calendar.</p></article>
+    <article class="card feat">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="4" height="7" rx="1.5"/></svg></div>
+      <h3>Board and dashboard</h3><p>Every application on a board and in a table, with a funnel, a week-by-week chart and your next interviews.</p></article>
+    <article class="card feat">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div>
+      <h3>Themes and languages</h3><p>Twelve resume themes and a theme builder, in 21 languages, printed to PDF on your machine.</p></article>
+    <article class="card feat">
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h10M4 18h6"/><path d="m16 15 3 3-3 3"/></svg></div>
+      <h3>Daily GenAI job run</h3><p>Optional script for GenAI roles in India: it searches every morning, emails postings that ask for it with your own resume, and mails you a summary.</p></article>
+  </div>
+</div></section>
+
+
+<section id="privacy"><div class="wrap">
+  <p class="eyebrow">Privacy</p>
+  <h2>You decide what leaves your computer.</h2>
+  <p class="lead">There is no GyaanStack account and no server in the middle. Your data stays in your own database, and the app talks only to the services you switch on. <a href="/privacy.html">Read the privacy policy</a>.</p>
+  <div class="privacy-grid">
+    <div class="card"><h3>Runs where you put it</h3><p>Your laptop, a phone browser on your network, or a small server on your own domain. One person, one password.</p></div>
+    <div class="card"><h3>Local models work</h3><p>With Ollama or LM Studio, your profile and documents never leave your hardware. A hosted model receives the text it writes from.</p></div>
+    <div class="card"><h3>Google is optional</h3><p>Gmail and Calendar stay off until you connect them. Every send needs your confirmation in the app.</p></div>
+    <div class="card"><h3>Your data, your copy</h3><p>Export everything as one file, keep nightly backups, or delete it all with one button.</p></div>
+  </div>
+</div></section>
+
+<section id="install"><div class="wrap">
+  <p class="eyebrow">Install</p>
+  <h2>Running on your own computer.</h2>
+  <div class="dl">
+    <div><h3>Desktop app</h3><p class="muted">For Windows 10/11 and Linux (AppImage or .deb), with nothing else to install. Windows may warn about an unknown publisher the first time: choose More info, then Run anyway.</p></div>
+    <div class="btns"><a class="btn btn-main" href="https://github.com/raghu298/gyaanstack-apply/releases/latest">Download</a></div>
+  </div>
+  <p class="muted" style="margin-top:22px">On a Mac or a server, run it from source: Node.js 24, Yarn and PostgreSQL. <a href="https://github.com/raghu298/gyaanstack-apply#quick-start">Follow the install guide</a>.</p>
+</div></section>
+
+<section id="setup"><div class="wrap">
+  <div class="card setup">
+    <div>
+      <p class="eyebrow">Want it set up for you?</p>
+      <h2 style="margin-bottom:8px">We can install and configure it with you.</h2>
+      <p class="muted" style="margin:0">GyaanStack can set it up on your laptop or a small server over a call: your AI model, Gmail, your resume imported, and the daily GenAI search tuned to your roles.</p>
+    </div>
+    <div class="btns"><a class="btn btn-main" href="mailto:hello@gyaanstack.com?subject=GyaanStack%20Apply%20setup">Email hello@gyaanstack.com</a></div>
+  </div>
+  <div class="cta" style="padding:56px 0 0;border:0">
+    <h2>Free to use. Support it if it helps.</h2>
+    <p class="lead">If the app saves you hours of rewriting resumes, a coffee keeps it going. Preparing for GenAI roles? GyaanStack has a study library and interview prep.</p>
+    <div class="btns">
+      <a class="btn btn-main" href="https://buymeacoffee.com/aigyaanstack">Buy me a coffee</a>
+      <a class="btn btn-line" href="https://gyaanstack.com">Learn GenAI on GyaanStack</a>
+    </div>
+  </div>
+</div></section>
+</main>
+
+<footer class="foot"><div class="wrap">
+  <div class="foot-grid">
+    <div>
+      <a class="brand" href="/" aria-label="GyaanStack Apply home"><img src="/favicon.svg" alt="" width="28" height="28"><span class="brand-name">GyaanStack <em>Apply</em></span></a>
+      <p style="margin:10px 0 0;max-width:340px">A self-hosted job-application copilot. Free software under the GNU AGPL-3.0.</p>
+    </div>
+    <div>
+      <h5>Project</h5>
+      <ul>
+        <li><a href="https://github.com/raghu298/gyaanstack-apply">Source code</a></li>
+        <li><a href="https://github.com/raghu298/gyaanstack-apply#quick-start">Install guide</a></li>
+        <li><a href="https://github.com/raghu298/gyaanstack-apply/issues">Report a problem</a></li>
+        <li><a href="https://buymeacoffee.com/aigyaanstack">Buy me a coffee</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>GyaanStack</h5>
+      <ul>
+        <li><a href="https://gyaanstack.com">Library</a></li>
+        <li><a href="https://blog.gyaanstack.com">Blog</a></li>
+        <li><a href="https://videos.gyaanstack.com">Videos</a></li>
+        <li><a href="/privacy.html">Privacy policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="legal">Free software under the GNU AGPL-3.0 (<a href="https://github.com/raghu298/gyaanstack-apply/blob/main/NOTICE.md">licence and notices</a>). The full source is on <a href="https://github.com/raghu298/gyaanstack-apply">GitHub</a>. This page sets no cookies and runs no trackers.</p>
+</div></footer>
+<script>
+(function(){
+  var root=document.documentElement,btn=document.querySelector(".theme-btn");
+  function current(){return root.dataset.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}
+  if(btn)btn.addEventListener("click",function(){
+    var next=current()==="dark"?"light":"dark";root.dataset.theme=next;
+    try{localStorage.setItem("gsa-theme",next)}catch(e){}
+  });
+  var tabs=document.querySelectorAll(".tabs [data-shot]"),shots=document.querySelectorAll(".shots .shot");
+  tabs.forEach(function(t){t.addEventListener("click",function(){
+    tabs.forEach(function(x){x.setAttribute("aria-selected",x===t?"true":"false")});
+    shots.forEach(function(s){s.classList.toggle("is-on",s.dataset.shot===t.dataset.shot)});
+  })});
+  document.querySelectorAll(".menu-list a").forEach(function(a){a.addEventListener("click",function(){var d=a.closest("details");if(d)d.open=false})});
+})();
+</script>
+</body>
+</html>

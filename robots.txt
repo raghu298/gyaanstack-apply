@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://apply.gyaanstack.com/sitemap.xml
