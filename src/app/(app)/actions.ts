@@ -1,0 +1,47 @@
+"use server";
+
+import { z } from "zod";
+
+import { revalidatePath } from "next/cache";
+
+import { action, ActionError } from "@/lib/action";
+import { hideNote, writeNote } from "@/lib/daily-note";
+import { env } from "@/lib/env";
+import { saveSettings } from "@/lib/settings-data";
+import { userTimeZone } from "@/lib/time-zone";
+import { saveUsagePingChoice } from "@/lib/usage-ping";
+
+/** Remembers the dashboard's period (E9-8), for the next visit. */
+export const rememberDashboardPeriod = action(z.object({ period: z.enum(["30d", "90d", "all"]) }), async ({ period }) => {
+  await saveSettings({ dashboardPeriod: period });
+  return null;
+});
+
+/** Days without news before Needs you suggests a follow-up (E9-9). */
+export const rememberQuietDays = action(z.object({ days: z.number().int().min(1).max(60) }), async ({ days }) => {
+  await saveSettings({ quietDays: days });
+  return null;
+});
+
+/**
+ * The answer to the usage ping question (#172), from the dialog after
+ * sign-in or the switch in Settings → About. Closing the dialog is a no.
+ * While GYAANSTACK_TELEMETRY is set, it decides, and this changes nothing.
+ */
+export const chooseUsagePing = action(z.object({ send: z.boolean() }), async ({ send }) => {
+  if (env.GYAANSTACK_TELEMETRY) {
+    throw new ActionError(`GYAANSTACK_TELEMETRY=${env.GYAANSTACK_TELEMETRY} is set on the server, so it decides. Change it there.`);
+  }
+  await saveUsagePingChoice(send ? "on" : "off");
+  revalidatePath("/", "layout");
+  return null;
+});
+
+/** Today's daily note (E28-6): written once after the dashboard loads, or another one, up to three a day. */
+export const writeDailyNoteAction = action(z.object({ another: z.boolean() }), async ({ another }) => writeNote({ timeZone: await userTimeZone(), another }));
+
+/** "Hide for today" on the daily note: until midnight in the user's time zone. */
+export const hideDailyNote = action(z.object({}), async () => {
+  await hideNote({ timeZone: await userTimeZone() });
+  return null;
+});

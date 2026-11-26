@@ -1,0 +1,170 @@
+import "server-only";
+
+import { AiProvider } from "@/generated/prisma/enums";
+import { env, type Env } from "@/lib/env";
+import { loadSettings } from "@/lib/settings-data";
+
+import { API_KEY_UNREADABLE, ApiKeyUnreadable, apiKeyState, decryptApiKey } from "./api-key";
+import { DEFAULT_TIMEOUT_SECONDS, type AiSettingsView, type KeyState } from "./provider-options";
+
+// Which provider to use and how to reach it (E6-1): what's saved in Settings,
+// or else the GYAANSTACK_AI_* variables, or else the defaults below.
+
+export type AiConfig = {
+  provider: AiProvider;
+  baseUrl: string;
+  model: string | null;
+  apiKey: string | null;
+  /** Why the saved key can't be used, e.g. GYAANSTACK_SECRET changed. */
+  apiKeyProblem: string | null;
+  timeoutMs: number;
+};
+
+const PROVIDER_DEFAULTS: Record<AiProvider, { baseUrl: string; model: string | null; timeoutSeconds: number }> = {
+  [AiProvider.LOCAL]: { baseUrl: "http://localhost:11434", model: null, timeoutSeconds: DEFAULT_TIMEOUT_SECONDS.local },
+  [AiProvider.OPENAI]: { baseUrl: "https://api.openai.com/v1", model: null, timeoutSeconds: DEFAULT_TIMEOUT_SECONDS.hosted },
+  [AiProvider.ANTHROPIC]: { baseUrl: "https://api.anthropic.com", model: "claude-sonnet-5-5", timeoutSeconds: DEFAULT_TIMEOUT_SECONDS.hosted },
+  [AiProvider.MISTRAL]: { baseUrl: "https://api.mistral.ai/v1", model: "mistral-small-2603", timeoutSeconds: DEFAULT_TIMEOUT_SECONDS.hosted },
+  [AiProvider.LMSTUDIO]: { baseUrl: "http://host.docker.internal:1234", model: null, timeoutSeconds: DEFAULT_TIMEOUT_SECONDS.local },
+};
+
+const FROM_ENV: Record<NonNullable<Env["GYAANSTACK_AI_PROVIDER"]>, AiProvider> = {
+  local: AiProvider.LOCAL,
+  openai: AiProvider.OPENAI,
+  anthropic: AiProvider.ANTHROPIC,
+  mistral: AiProvider.MISTRAL,
+  lmstudio: AiProvider.LMSTUDIO,
+};
+
+type SavedSettings = {
+  provider: AiProvider | null;
+  baseUrl: string | null;
+  model: string | null;
+  apiKeyEnc: string | null;
+  /** Missing in tests that predate it. */
+  aiTimeoutSeconds?: number | null;
+};
+
+type AiEnv = Pick<
+  Env,
+  "GYAANSTACK_AI_PROVIDER" | "GYAANSTACK_AI_URL" | "GYAANSTACK_AI_MODEL" | "GYAANSTACK_AI_KEY" | "GYAANSTACK_AI_TIMEOUT_SECONDS"
+>;
+
+/**
+ * Settings win once a provider is saved there; until then the environment
+ * decides. The two are never mixed, except that an env key still serves a
+ * saved provider of the same kind, on the same server, that has no key of
+ * its own. A timeout saved in Settings counts for any provider, before
+ * GYAANSTACK_AI_TIMEOUT_SECONDS.
+ */
+export function resolveAiConfig(saved: SavedSettings | null, source: AiEnv, secret?: string): AiConfig {
+  const envProvider = source.GYAANSTACK_AI_PROVIDER ? FROM_ENV[source.GYAANSTACK_AI_PROVIDER] : null;
+  const useSaved = Boolean(saved?.provider);
+  const provider = (useSaved ? saved!.provider : envProvider) ?? AiProvider.LOCAL;
+  const defaults = PROVIDER_DEFAULTS[provider];
+
+  let apiKey: string | null = null;
+  let apiKeyProblem: string | null = null;
+  if (useSaved && saved!.apiKeyEnc) {
+    try {
+      apiKey = decryptApiKey(saved!.apiKeyEnc, secret);
+    } catch (error) {
+      if (!(error instanceof ApiKeyUnreadable)) throw error;
+      apiKeyProblem = API_KEY_UNREADABLE;
+    }
+  } else if (!useSaved || (envProvider === provider && sameServer(provider, saved!.baseUrl, source.GYAANSTACK_AI_URL))) {
+    apiKey = source.GYAANSTACK_AI_KEY ?? null;
+  }
+
+  return {
+    provider,
+    baseUrl: (useSaved ? saved!.baseUrl : source.GYAANSTACK_AI_URL) || defaults.baseUrl,
+    model: (useSaved ? saved!.model : source.GYAANSTACK_AI_MODEL) || defaults.model,
+    apiKey,
+    apiKeyProblem,
+    // Settings → AI provider's timeout, whichever provider (public issue 118).
+    timeoutMs: (saved?.aiTimeoutSeconds ?? source.GYAANSTACK_AI_TIMEOUT_SECONDS ?? defaults.timeoutSeconds) * 1000,
+  };
+}
+
+/**
+ * Whether two addresses of a provider are the same server (scheme, host and
+ * port), so a key for one may go to the other: another path is the same
+ * server, another host isn't. Empty means the provider's default address.
+ */
+export function sameServer(provider: AiProvider, a: string | null | undefined, b: string | null | undefined): boolean {
+  const origin = (address: string | null | undefined) => {
+    const url = address?.trim() || PROVIDER_DEFAULTS[provider].baseUrl;
+    return URL.canParse(url) ? new URL(url).origin : null;
+  };
+  const left = origin(a);
+  return left !== null && left === origin(b);
+}
+
+/** The AI configuration in effect right now. */
+export async function loadAiConfig(): Promise<AiConfig> {
+  return resolveAiConfig(await loadSettings(), env);
+}
+
+/**
+ * The AI settings as the settings screen shows them: what's in effect,
+ * whether it comes from Settings or GYAANSTACK_AI_*, and never the key.
+ */
+export async function loadAiSettingsView(): Promise<AiSettingsView> {
+  const saved = await loadSettings();
+  const config = resolveAiConfig(saved, env);
+  const model = config.model ?? "";
+  const test = saved.aiTest;
+  return {
+    provider: config.provider,
+    baseUrl: config.baseUrl,
+    model,
+    keyState: keyStateOf(saved, config),
+    keyEnding: keyEnding(saved),
+    // The last connection test, if it tested what's chosen now (E34-1).
+    test: test && test.provider === config.provider && test.baseUrl === config.baseUrl && test.model === model ? { at: test.at, ok: test.ok, seconds: test.seconds, error: test.error } : null,
+    timeoutSeconds: saved.aiTimeoutSeconds,
+    envTimeoutSeconds: env.GYAANSTACK_AI_TIMEOUT_SECONDS ?? null,
+  };
+}
+
+/**
+ * A saved key's last four characters (ST4), decrypted here so the key
+ * itself never leaves the server; null when none is saved, it can't be
+ * read, or it's too short to show any of.
+ */
+export function keyEnding(saved: { provider: AiProvider | null; apiKeyEnc: string | null }): string | null {
+  if (!saved.provider || !saved.apiKeyEnc) return null;
+  try {
+    const key = decryptApiKey(saved.apiKeyEnc);
+    return key.length >= 12 ? key.slice(-4) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Whether a key is in play for the provider in effect, and where it comes from. */
+export function keyStateOf(saved: { provider: AiProvider | null; apiKeyEnc: string | null } | null, config: AiConfig): KeyState {
+  if (saved?.provider && saved.apiKeyEnc) return apiKeyState(saved.apiKeyEnc);
+  return config.apiKey ? "env" : "none";
+}
+
+/** Whether an AI provider has been chosen, in Settings or with GYAANSTACK_AI_PROVIDER. */
+export async function isAiConfigured(): Promise<boolean> {
+  if (env.GYAANSTACK_AI_PROVIDER) return true;
+  return Boolean((await loadSettings()).provider);
+}
+
+/**
+ * Whether GyaanStack Apply's own AI model can be called: a provider with its model,
+ * and a key for the hosted ones that always need one. Without it, and with
+ * the Claude connector on, the AI buttons hand the work to Claude chat
+ * (src/lib/connector/handoff.ts, #221).
+ */
+export async function isAiUsable(): Promise<boolean> {
+  if (!(await isAiConfigured())) return false;
+  const config = await loadAiConfig();
+  if (!config.model || config.apiKeyProblem) return false;
+  const needsKey = config.provider === AiProvider.ANTHROPIC || config.provider === AiProvider.MISTRAL;
+  return !needsKey || Boolean(config.apiKey);
+}

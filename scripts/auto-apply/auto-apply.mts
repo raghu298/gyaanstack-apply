@@ -1,0 +1,346 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- job APIs return untyped JSON */
+// Daily auto-apply for GyaanStack Apply: starts at 8:00 with the job agent and waits for its run to finish.
+// 1. Inbox check (recruiter replies get linked to applications).
+// 2. For drafts whose posting asks for applications by email, writes the email
+//    and sends it with the owner's own resume (Java + GenAI one for Java roles).
+// 3. Mails a summary to the owner: what was sent, and portal-only jobs to apply by hand.
+// run-auto-apply.sh starts this from the app folder.
+const D = `${process.cwd()}/src/lib`;
+const DATA_DIR = process.env.GYAANSTACK_DATA_DIR ?? `${process.env.HOME}/gyaanstack-data`;
+const { prisma } = await import(`${D}/prisma.ts`);
+const { syncInbox } = await import(`${D}/google/sync.ts`);
+const { sendApplicationEmail } = await import(`${D}/google/send.ts`);
+const { sendMail, searchMessages, getMessage } = await import(`${D}/google/gmail.ts`);
+const { loadGoogleAccount } = await import(`${D}/google/account.ts`);
+const { writeEmailJob } = await import(`${D}/jobs/write-email.ts`);
+const { startJob, getJob } = await import(`${D}/jobs/runner.ts`);
+const { connectorDraftJob } = await import(`${D}/connector/draft.ts`);
+
+// Own searches on top of GyaanStack Apply's job agent: Python + GenAI and Java + GenAI, Bangalore or remote from India.
+const ALL_SEARCHES = [
+  "Python GenAI Engineer in Bengaluru", "Java GenAI Engineer in Bengaluru", "Agentic AI Engineer in Bengaluru",
+  "AI Engineer LLM in Bengaluru", "Remote Senior GenAI Engineer India", "Senior Generative AI Engineer in Bengaluru",
+  "Lead AI Engineer in Bengaluru", "LLM Engineer in Bengaluru", "Remote Agentic AI Engineer India",
+  "AI/ML Engineer GenAI in Bengaluru", "Java Spring Boot AI Engineer in Bengaluru", "AI Architect Generative AI in Bengaluru",
+  "Remote LLM Engineer India", "RAG LangChain Engineer in Bengaluru", "Machine Learning Engineer LLM in Bengaluru",
+  "Remote Java Backend Engineer AI India",
+];
+// Searches per day: the free JSearch plan (~200/month) fits 4; raise GYAANSTACK_JSEARCH_PER_DAY in .env after upgrading.
+const PER_DAY = Math.min(ALL_SEARCHES.length, Number(process.env.GYAANSTACK_JSEARCH_PER_DAY ?? 4));
+const PAGES = String(Number(process.env.GYAANSTACK_JSEARCH_PAGES ?? 1));
+// Rotate through the list so every phrase is searched within a few days.
+const dayIndex = Math.floor(Date.now() / 86_400_000);
+const SEARCHES = Array.from({ length: PER_DAY }, (_, i) => ALL_SEARCHES[(dayIndex * PER_DAY + i) % ALL_SEARCHES.length]);
+const MAX_NEW_DRAFTS = Number(process.env.GYAANSTACK_MAX_NEW_DRAFTS ?? 15);
+// Titles that aren't the target: senior/lead GenAI engineering.
+const WRONG_TITLE = /\b(qa|test(er|ing)?|devops|intern|trainee|junior|fresher|full[- ]?stack|front[- ]?end|data analyst|sales|recruit|support|walk-?in|part[- ]time|freelance|trainers?|faculty|instructor|teacher|mentor|tutor)\b/i;
+const RIGHT_TITLE = /gen ?ai|llm|agentic|\bai\b|machine learning|ml\b|rag/i;
+const MIN_FIT = 0.6;
+
+const DRY = process.env.DRY === "1";
+// The only Google account applications may go from, and where the summary goes.
+const OWNER = (process.env.GYAANSTACK_OWNER_EMAIL ?? "").toLowerCase();
+if (!OWNER) { console.error("Set GYAANSTACK_OWNER_EMAIL in .env (the one Google account allowed to send)."); process.exit(1); }
+const MAX_SENDS = Number(process.env.GYAANSTACK_MAX_SENDS ?? 8);
+const MIN_SCORE = 70;
+const ADDRESS = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
+// Addresses that are not for applying: accommodation, privacy, no-reply and similar.
+const NOT_FOR_APPLYING = /accommodat|disabilit|privacy|gdpr|data protection|no-?reply|unsubscribe|fraud|scam|eeo|accessib|grievance|whistle/i;
+const APPLY_WORDS = /resume|cv\b|profile|apply|application|share|send|mail|reach out|contact/i;
+
+const log: string[] = [];
+const say = (line: string) => { console.log(line); log.push(line); };
+const pause = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** The address a posting asks applications to go to, or null. */
+function applyAddress(posting: string): string | null {
+  for (const match of posting.matchAll(ADDRESS)) {
+    const around = posting.slice(Math.max(0, match.index! - 200), match.index! + match[0].length + 50);
+    if (NOT_FOR_APPLYING.test(around) || NOT_FOR_APPLYING.test(match[0])) continue;
+    if (APPLY_WORDS.test(around)) return match[0].toLowerCase();
+  }
+  return null;
+}
+
+async function emailUnits(applicationId: string) {
+  const document = await prisma.document.findFirst({ where: { applicationId, kind: "EMAIL" } });
+  return (document?.units as { id: string; text: string }[] | undefined) ?? null;
+}
+
+async function writeEmail(applicationId: string) {
+  const id = await startJob(writeEmailJob, { applicationId });
+  for (let i = 0; i < 100; i++) {
+    await pause(3000);
+    const job = await getJob(id);
+    if (job?.status === "DONE") return true;
+    if (job?.status === "FAILED") { say(`  could not write the email: ${job.error ?? "unknown"}`); return false; }
+  }
+  return false;
+}
+
+// Both start at 8:00: wait (up to 45 min) for today's job agent run, so its new drafts are checked too.
+if (!DRY) {
+  const midnight = new Date(); midnight.setHours(0, 0, 0, 0);
+  const deadline = Date.now() + 45 * 60_000;
+  for (;;) {
+    const scan = await prisma.job.findFirst({ where: { type: "agent-scan", createdAt: { gte: midnight } }, orderBy: { createdAt: "desc" } });
+    const busy = await prisma.job.count({ where: { type: { startsWith: "agent-" }, status: { in: ["QUEUED", "RUNNING"] } } });
+    if (scan && busy === 0) { say(`Job agent finished today's run (${scan.status}).`); break; }
+    if (Date.now() > deadline) { say(scan ? "Job agent still drafting after 45 min; going on without its last drafts." : "Job agent hasn't run today (is GyaanStack Apply running?); going on."); break; }
+    await new Promise((r) => setTimeout(r, 60_000));
+  }
+}
+
+if (!DRY) try {
+  const inbox = await syncInbox();
+  say(`Inbox: read ${inbox.fetched} new emails, linked ${inbox.kept} to applications.`);
+} catch (error) {
+  say(`Inbox check failed: ${String(error)}`);
+}
+
+// Fetch: new postings from JSearch, drafted with GyaanStack Apply's writer.
+const known = new Set((await prisma.application.findMany({ select: { company: true, role: true } })).map((a: { company: string; role: string }) => `${a.company}|${a.role}`.toLowerCase()));
+const knownCompanies = new Set((await prisma.application.findMany({ select: { company: true } })).map((a: { company: string }) => a.company.toLowerCase()));
+let drafted = 0;
+const sentAddresses = new Set(
+  (await prisma.emailMessage.findMany({ where: { direction: "OUTGOING" }, select: { toAddress: true } }))
+    .flatMap((mail: { toAddress: string }) => mail.toAddress.toLowerCase().match(ADDRESS) ?? []),
+);
+if (!DRY && process.env.GYAANSTACK_JSEARCH_KEY) {
+  for (const query of SEARCHES) {
+    if (drafted >= MAX_NEW_DRAFTS) break;
+    const url = new URL("https://api.openwebninja.com/jsearch/search");
+    url.search = new URLSearchParams({ query, country: "in", date_posted: "week", num_pages: PAGES }).toString();
+    let jobs: any[] = [];
+    try {
+      const answer: any = await (await fetch(url, { headers: { "x-api-key": process.env.GYAANSTACK_JSEARCH_KEY } })).json();
+      jobs = answer.data ?? [];
+      if (answer.status !== "OK") say(`Search "${query}" failed: ${JSON.stringify(answer.error ?? answer.status)}`);
+    } catch (error) { say(`Search "${query}" failed: ${String(error)}`); }
+    for (const job of jobs) {
+      if (drafted >= MAX_NEW_DRAFTS) break;
+      const company = String(job.employer_name ?? "");
+      const title = String(job.job_title ?? "");
+      const description = String(job.job_description ?? "");
+      // AI in the title, or a Java/Python engineering title whose posting is about GenAI.
+      const aiInPosting = /gen ?ai|\bllm|agentic|\brag\b|langchain|langgraph/i.test(description);
+      const techTitle = /\b(java|python|backend|software|engineer|developer|lead|architect)\b/i.test(title);
+      if (!company || WRONG_TITLE.test(title) || !(RIGHT_TITLE.test(title) || (techTitle && aiInPosting && /\b(java|python)\b/i.test(description)))) continue;
+      if (knownCompanies.has(company.toLowerCase()) || known.has(`${company}|${title}`.toLowerCase())) continue;
+      const direct = (job.apply_options ?? []).find((o: any) => o.is_direct)?.apply_link;
+      const posting = `${title}\n${company} — ${job.job_location ?? "Bengaluru, India"}\n\n${job.job_description ?? ""}`;
+      const id = await startJob(connectorDraftJob, { posting, postingUrl: direct ?? job.job_apply_link ?? "", note: "", postingId: null });
+      knownCompanies.add(company.toLowerCase());
+      for (let i = 0; i < 200; i++) {
+        await pause(3000);
+        const state = await getJob(id);
+        if (state?.status === "DONE") { drafted++; say(`New draft: ${company} – ${title}`); break; }
+        if (state?.status === "FAILED") { say(`Could not draft ${company} – ${title}: ${state.error ?? ""}`); break; }
+      }
+    }
+  }
+}
+
+// Second source: freehire.me (Naukri, Hirist and more), free and no key. Only postings that
+// give an email to apply to are drafted, since the rest need a browser.
+const FREEHIRE_QUERIES = ["genai", "generative ai", "llm", "agentic", "java ai"];
+const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
+/** Too junior, or not a permanent job. */
+function wrongKind(text: string): boolean {
+  if (/part[- ]time|short[- ]term|freelance|internship|contract (role|position|basis)/i.test(text.slice(0, 1500))) return true;
+  const ranges = [...text.matchAll(/(\d{1,2})\s*(?:-|to|–)\s*(\d{1,2})\s*(?:\+\s*)?(?:years|yrs)/gi)].map((m) => Number(m[2]));
+  return ranges.length > 0 && Math.max(...ranges) < 6;
+}
+if (!DRY) {
+  let fhDrafted = 0;
+  const slugs = new Set<string>();
+  for (const q of FREEHIRE_QUERIES) {
+    try {
+      const answer: any = await (await fetch(`https://freehire.me/api/v1/jobs/search?q=${encodeURIComponent(q)}&countries=in&posted_within_days=3&limit=50`)).json();
+      for (const job of answer.data ?? []) {
+        if (WRONG_TITLE.test(job.title ?? "") || !/bangal|bengal|remote|india/i.test(String(job.location ?? "india"))) continue;
+        slugs.add(job.public_slug);
+      }
+    } catch (error) { say(`freehire search "${q}" failed: ${String(error)}`); }
+  }
+  for (const slug of slugs) {
+    if (fhDrafted >= MAX_NEW_DRAFTS) break;
+    let job: any;
+    try { job = (await (await fetch(`https://freehire.me/api/v1/jobs/${slug}`)).json()).data; } catch { continue; }
+    if (!job || job.closed_at) continue;
+    const text = String(job.description ?? "").replace(/<[^>]+>/g, " ");
+    const address = applyAddress(text);
+    if (!address || wrongKind(text)) continue;
+    const company = String(job.company ?? "");
+    if (sentAddresses.has(address) || knownCompanies.has(company.toLowerCase())) continue;
+    if (!/gen ?ai|llm|agentic|\brag\b|langchain|langgraph/i.test(text)) continue;
+    const posting = `${job.title}\n${company} — ${job.location ?? "India"}\n\n${text}`;
+    const id = await startJob(connectorDraftJob, { posting, postingUrl: job.url ?? "", note: "", postingId: null });
+    knownCompanies.add(company.toLowerCase());
+    for (let i = 0; i < 200; i++) {
+      await pause(3000);
+      const state = await getJob(id);
+      if (state?.status === "DONE") { fhDrafted++; drafted++; say(`New draft (email): ${company} – ${job.title}`); break; }
+      if (state?.status === "FAILED") { say(`Could not draft ${company} – ${job.title}: ${state.error ?? ""}`); break; }
+    }
+  }
+}
+
+/** Which of the two original resumes a posting gets (same rule as GyaanStack Apply's sending). */
+function resumeFor(role: string, posting: string): string {
+  const javaCount = (posting.match(/\bjava\b/gi) ?? []).length;
+  const isJava = /\bjava\b/i.test(role) || javaCount >= 3 || (javaCount > 0 && /spring/i.test(posting));
+  const file = (path: string | undefined, fallback: string) => path?.split("/").pop() ?? fallback;
+  return isJava ? `${file(process.env.GYAANSTACK_RESUME_JAVA_PDF, "Java resume")} (Java + GenAI)` : `${file(process.env.GYAANSTACK_RESUME_PDF, "main resume")} (main)`;
+}
+
+/** Share of the posting's requirements the profile covers (partial counts half). */
+function fit(match: unknown): number | null {
+  const items = (match as { items?: { result: string }[] } | null)?.items;
+  if (!items?.length) return null;
+  return items.reduce((sum, item) => sum + (item.result === "covered" ? 1 : item.result === "partial" ? 0.5 : 0), 0) / items.length;
+}
+
+const connected = (await loadGoogleAccount())?.email?.toLowerCase() ?? null;
+const rightAccount = connected === OWNER;
+if (connected && !rightAccount) say(`WRONG GOOGLE ACCOUNT: GyaanStack Apply is connected to ${connected}, not ${OWNER}. Nothing was sent. Reconnect in GyaanStack Apply → Settings → Google and pick ${OWNER}.`);
+
+const sentTo = new Set(
+  (await prisma.emailMessage.findMany({ where: { direction: "OUTGOING" }, select: { toAddress: true } }))
+    .flatMap((mail: { toAddress: string }) => mail.toAddress.toLowerCase().match(ADDRESS) ?? []),
+);
+const appliedCompanies = new Set(
+  (await prisma.application.findMany({ where: { status: { not: "DRAFT" } }, select: { company: true } })).map((a: { company: string }) => a.company.toLowerCase()),
+);
+const drafts = await prisma.application.findMany({ where: { status: "DRAFT" }, orderBy: { createdAt: "desc" } });
+
+const sent: string[] = [];
+const portal: string[] = [];
+for (const application of drafts) {
+  const label = `${application.company} – ${application.role}`;
+  if (WRONG_TITLE.test(application.role)) { say(`Not for you, delete it in GyaanStack Apply: ${label} (not a GenAI engineering role).`); continue; }
+  const address = applyAddress(application.postingText);
+  const score = application.agentScore ?? null;
+  if (!address) {
+    const isNew = Date.now() - application.createdAt.getTime() < 26 * 3600_000 ? "NEW · " : "";
+    const f = fit(application.match);
+    portal.push(`${isNew}${label}${f === null ? "" : ` (${Math.round(f * 100)}% match)`}\n   Resume: ${resumeFor(application.role, application.postingText)}\n   Apply: ${application.postingUrl || "(no link saved)"}`);
+    continue;
+  }
+  if (score !== null && score < MIN_SCORE) { say(`Skipped ${label}: score ${score} is under ${MIN_SCORE}.`); continue; }
+  const share = fit(application.match);
+  if (share !== null && share < MIN_FIT) { say(`Skipped ${label}: covers only ${Math.round(share * 100)}% of the requirements.`); continue; }
+  if (sentTo.has(address) || appliedCompanies.has(application.company.toLowerCase())) { say(`Skipped ${label}: already applied there.`); continue; }
+  if (!rightAccount) { portal.push(`${label} (would be emailed to ${address} once the right Google account is connected)`); continue; }
+  if (sent.length >= MAX_SENDS) { say(`Left for tomorrow: ${label} (daily limit of ${MAX_SENDS}).`); continue; }
+
+  if (DRY) { say(`Would send: ${label} → ${address}`); sent.push(`${label} → ${address} (dry run)`); continue; }
+  let units = await emailUnits(application.id);
+  if (!units && (await writeEmail(application.id))) units = await emailUnits(application.id);
+  const to = units?.find((unit) => unit.id === "to")?.text ?? "";
+  if (!to.toLowerCase().includes(address)) { say(`Skipped ${label}: the email isn't addressed to ${address}.`); continue; }
+  try {
+    const result = await sendApplicationEmail(application.id);
+    sentTo.add(address);
+    appliedCompanies.add(application.company.toLowerCase());
+    sent.push(`${label} → ${address} (attached: ${result.attachments.join(", ")})`);
+    say(`Sent: ${label} → ${address}`);
+    await pause(5000);
+  } catch (error) {
+    say(`Could not send ${label}: ${String(error)}`);
+  }
+}
+
+// The nightly GyaanStack job email (label gyaanstack-jobs): keep Bangalore / remote roles not yet applied to,
+// save them for /apply-today and list them in the summary. Nothing is applied to here.
+const gyaan: string[] = [];
+const GYAAN_FILE = `${DATA_DIR}/gyaanstack-today.json`;
+const NOT_FOR_ME = /\b(freelance|part[- ]?time|consultant\/freelance|contract|immediate joiners?|intern|trainee)\b/i;
+const NEEDS_LOGIN = /myworkdayjobs\.com|oraclecloud\.com|myworkdaysite\.com|taleo\.net/i;
+const AGGREGATOR = /shine\.com|hirist\.tech|jooble|kitjob|jobrapido|hiring\.cafe/i;
+try {
+  // Only this morning's email; an older one was already handled the day before. It usually lands 06:00–07:30 IST
+  // but some nights the server sends it after 9:00 (3 and 10 Nov), so keep checking every 5 min until 10:30 IST.
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  const istHour = () => Number(new Date().toLocaleString("en-GB", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hour12: false }).replace(":", ".").slice(0, 5));
+  const todaysMail = async () => {
+    const [id] = rightAccount ? await searchMessages("from:hello@gyaanstack.com subject:Jobs newer_than:1d", { max: 1 }) : [];
+    const found = id ? await getMessage(id) : null;
+    return found && found.date.toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" }) === today ? found : null;
+  };
+  let mail = await todaysMail();
+  if (!mail && rightAccount && !DRY && istHour() < 10.3) say("GyaanStack email not here yet; checking every 5 min until 10:30 IST.");
+  while (!mail && rightAccount && !DRY && istHour() < 10.3) {
+    await new Promise((r) => setTimeout(r, 5 * 60_000));
+    mail = await todaysMail();
+  }
+  const word = (name: string) => name.toLowerCase().replace(/\b(private|pvt|limited|ltd|inc|llc|group|india|international|global|solutions|technologies|services|software)\b|[^a-z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
+  const applied = [...appliedCompanies].map((name) => word(String(name))).filter((name) => name.length >= 3);
+  const appliedBefore = (company: string) => {
+    const key = word(company);
+    if (key.length < 3) return false;
+    const has = (text: string, part: string) => new RegExp(`(^| )${part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}( |$)`).test(text);
+    const joined = key.replace(/ /g, "");
+    return applied.some((done) => has(key, done) || has(done, key) || done.replace(/ /g, "") === joined);
+  };
+  const jobs: { company: string; title: string; location: string; url: string; backup: string | null; kind: string }[] = [];
+  for (const block of mail?.text.split(/\n(?=\[\s*\d+\])/) ?? []) {
+    const head = block.match(/^\[\s*\d+\]\s+\d+\s+(.+?)\s+—\s+(.+)$/m);
+    const url = block.match(/^\s*apply:\s*(\S+)/m)?.[1];
+    if (!head || !url) continue;
+    const [, title, company] = head;
+    const location = block.split("\n")[1]?.split(" · ")[0].trim() ?? "";
+    const label = `${company} – ${title}`;
+    const years = Number(block.match(/note: Only (\d+)\+ yrs asked/)?.[1] ?? 99);
+    if (!/bangalore|bengaluru|remote/i.test(location)) continue;
+    if (NOT_FOR_ME.test(title) || WRONG_TITLE.test(title) || years < 5) { say(`GyaanStack email, skipped: ${label} (contract / junior / not the target role).`); continue; }
+    if (appliedBefore(company)) { say(`GyaanStack email, already applied there: ${label}.`); continue; }
+    const kind = NEEDS_LOGIN.test(url) ? "needs your careers-site login" : AGGREGATOR.test(url) ? "aggregator: find the real posting" : /naukri\.com/.test(url) ? "Naukri" : /instahyre\.com/.test(url) ? "Instahyre" : "company careers page";
+    jobs.push({ company, title, location, url, backup: block.match(/if Naukri says expired:\s*(\S+)/)?.[1] ?? null, kind });
+    gyaan.push(`${label} [${kind}]\n   ${location}\n   Apply: ${url}`);
+  }
+  const { writeFileSync } = await import("node:fs");
+  // mailDate null = this morning's email hadn't arrived yet; /apply-today then reads Gmail itself.
+  writeFileSync(GYAAN_FILE, JSON.stringify({ date: today, mailDate: mail ? today : null, subject: mail?.subject ?? null, jobs }, null, 2));
+  say(mail ? `GyaanStack email: ${jobs.length} Bangalore/remote jobs saved for /apply-today.` : "GyaanStack email: today's hasn't arrived yet; /apply-today will read it from Gmail.");
+} catch (error) {
+  say(`Could not read the GyaanStack email: ${String(error)}`);
+}
+
+say(`New drafts today: ${drafted}.`);
+say(`Drafts checked: ${drafts.length}; sent by email: ${sent.length}; portal only: ${portal.length}.`);
+const account = await loadGoogleAccount();
+if (!account) say("Google is not connected: reconnect in GyaanStack Apply → Settings → Google.");
+if (account && !DRY) try {
+  const today = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  const body = [
+    `GyaanStack Apply daily run, ${today}`,
+    "",
+    `Applied by email today (${sent.length}):`,
+    ...(sent.length ? sent.map((line) => ` - ${line}`) : [" - none"]),
+    "",
+    "Portal jobs (Naukri / LinkedIn / Instahyre): open Terminal, run `claude --chrome`, type /apply-today.",
+    "",
+    `Waiting for you to apply on the portal (${portal.length}):`,
+    ...(portal.length ? portal.map((line) => ` - ${line}`) : [" - none"]),
+    "",
+    `From last night's GyaanStack email, not applied yet (${gyaan.length}) — /apply-today picks these up:`,
+    ...(gyaan.length ? gyaan.map((line) => ` - ${line}`) : [" - none"]),
+    "",
+    "Notes:",
+    ...log.map((line) => ` - ${line}`),
+    "",
+    "Open GyaanStack Apply: http://localhost:3000/applications",
+  ].join("\n");
+  await sendMail({ from: account.email, to: OWNER, subject: `GyaanStack Apply: ${sent.length} applied by email, ${portal.length} waiting for you (${today})`, body, attachments: [] });
+} catch (error) {
+  console.log(`Could not email the summary: ${String(error)}`);
+}
+{
+  // A Mac notification too, so a run is never missed even if Gmail fails.
+  const { execFileSync } = await import("node:child_process");
+  const text = !rightAccount ? `Wrong Google account connected (${connected ?? "none"}). Reconnect with ${OWNER}.` : `${sent.length} applied by email, ${portal.length} waiting for you on websites. Check Gmail or GyaanStack Apply.`;
+  if (!DRY) try { execFileSync("osascript", ["-e", `display notification "${text}" with title "GyaanStack Apply daily run" sound name "Glass"`]); } catch {}
+}
+await prisma.$disconnect?.();
+process.exit(0);
