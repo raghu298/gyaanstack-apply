@@ -4,6 +4,10 @@ A self-hosted job-application copilot: one profile, a tailored resume and cover 
 
 Version 1.0.0. Part of [GyaanStack](https://gyaanstack.com).
 
+[![Download for Windows or Linux](https://img.shields.io/badge/Download-Windows%20%7C%20Linux-0b7a6b?style=for-the-badge)](https://github.com/raghu298/gyaanstack-apply/releases/latest)
+[![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-aigyaanstack-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/aigyaanstack)
+[![Website](https://img.shields.io/badge/Website-apply.gyaanstack.com-0a192f?style=for-the-badge)](https://apply.gyaanstack.com)
+
 ## What it does
 
 GyaanStack Apply runs on your own computer or server, with one password and your data in your own PostgreSQL database (or an SQLite file). You pick the AI model: a local one through Ollama or LM Studio, or a hosted one (Anthropic, Mistral or any OpenAI-compatible API).
