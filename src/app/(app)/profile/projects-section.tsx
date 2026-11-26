@@ -46,7 +46,7 @@ function ProjectForm({
   const set = (change: Partial<ProjectItem>) => onChange({ ...entry, ...change });
 
   return (
-    <div className="grid grid-cols-2 gap-[18px]" onBlur={flush}>
+    <div className="grid grid-cols-2 gap-[18px] max-md:flex max-md:flex-col" onBlur={flush}>
       <Input
         label="Project"
         placeholder="Churn predictor"

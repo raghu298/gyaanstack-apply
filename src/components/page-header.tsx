@@ -36,7 +36,7 @@ export function PageHeader({ title, description, actions, before, breadcrumb }: 
       </PageBar>
       {/* The screen's content starts 32px under the bar, after the description if there is one. */}
       {description ? (
-        <p className="max-w-[620px] px-10 pt-1 pb-8 text-lead text-pretty text-muted">{description}</p>
+        <p className="max-w-[620px] px-10 pt-1 pb-8 text-lead text-pretty text-muted max-md:px-4 max-md:pb-6">{description}</p>
       ) : (
         <div aria-hidden="true" className="h-8" />
       )}
@@ -54,12 +54,13 @@ export function PageBar({ children, compact = false }: { children: ReactNode; /*
     // -mx-px: over the panel's side borders, so the bar's own line up with them.
     // pt-2: the shell's 8px above the panel, as at its sides and bottom; it
     // stays while the bar sticks, so nothing scrolls by above it.
-    <div className="sticky top-0 z-20 -mx-px bg-paper pt-2">
+    // Phones: under the shell's top bar, edge to edge, with 16px gutters.
+    <div className="sticky top-0 z-20 -mx-px bg-paper pt-2 max-md:top-[52px] max-md:mx-0 max-md:pt-0">
       <div
         className={
           compact
-            ? "flex min-h-12 flex-wrap items-center gap-x-6 gap-y-3 rounded-t-panel border border-line-card border-b-line bg-surface px-7 py-[18px]"
-            : "flex min-h-12 flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-t-panel border border-b-0 border-line-card bg-surface px-10 pt-7 pb-4"
+            ? "flex min-h-12 flex-wrap items-center gap-x-6 gap-y-3 rounded-t-panel border border-line-card border-b-line bg-surface px-7 py-[18px] max-md:rounded-none max-md:border-x-0 max-md:border-t-0 max-md:px-4 max-md:py-3"
+            : "flex min-h-12 flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-t-panel border border-b-0 border-line-card bg-surface px-10 pt-7 pb-4 max-md:rounded-none max-md:border-0 max-md:px-4 max-md:pt-5 max-md:pb-3"
         }
       >
         {children}

@@ -124,7 +124,7 @@ export function AgentScreen({ view, tab = "drafts" }: { view: AgentView; tab?: A
           </Link>
         }
       />
-      <div className="flex flex-col gap-3 px-10 pb-4">
+      <div className="flex flex-col gap-3 px-10 max-md:px-4 pb-4">
         <Notices view={view} />
         <SourceBar
           label="Agent"
@@ -195,7 +195,7 @@ export function AgentScreen({ view, tab = "drafts" }: { view: AgentView; tab?: A
         </details>
       </div>
 
-      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b border-line px-10">
+      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b border-line px-10 max-md:px-4">
         <ListingTabs
           label="What it found"
           current={tab}

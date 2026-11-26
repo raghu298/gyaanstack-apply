@@ -203,17 +203,17 @@ export function FitColumn({
       <aside aria-label="How you fit" className="hidden w-[380px] flex-none overflow-y-auto border-r border-line px-6 py-[22px] min-[1500px]:block">
         {children}
       </aside>
-      <div className="relative flex w-[68px] flex-none border-r border-line min-[1500px]:hidden">
+      <div className="relative flex w-[68px] flex-none border-r border-line min-[1500px]:hidden max-md:w-full max-md:border-r-0 max-md:border-b">
         <Dialog.Root modal={false} open={open} onOpenChange={setOpen}>
-          <Dialog.Trigger className="flex w-full flex-col items-center gap-2.5 overflow-y-auto py-[22px] hover:bg-hover">
+          <Dialog.Trigger className="flex w-full flex-col items-center gap-2.5 overflow-y-auto py-[22px] hover:bg-hover max-md:min-h-11 max-md:flex-row max-md:overflow-x-auto max-md:px-4 max-md:py-2">
             <span className="sr-only">Show how you fit:</span> <ScoreRing hit={hit} total={total} size="lg" />
-            <span aria-hidden="true" className="flex flex-col items-center gap-2 pt-1">
+            <span aria-hidden="true" className="flex flex-col items-center gap-2 pt-1 max-md:flex-row max-md:pt-0">
               {match?.items.map((item, index) => <Mark key={index} result={item.result} />)}
             </span>
           </Dialog.Trigger>
           <Dialog.Content
             aria-describedby={undefined}
-            className="absolute inset-y-0 left-0 z-30 w-[380px] max-w-[calc(100vw-80px)] overflow-y-auto border-r border-line-card bg-surface px-6 py-[22px] shadow-menu focus:outline-none"
+            className="absolute inset-y-0 left-0 z-30 w-[380px] max-w-[calc(100vw-80px)] overflow-y-auto max-md:fixed max-md:inset-0 max-md:z-50 max-md:w-full max-md:max-w-none border-r border-line-card bg-surface px-6 py-[22px] shadow-menu focus:outline-none"
           >
             <Dialog.Title className="sr-only">How you fit</Dialog.Title>
             <Dialog.Close aria-label="Close" className="absolute top-3 right-3 grid size-8 place-items-center rounded-control text-muted hover:bg-hover hover:text-ink">

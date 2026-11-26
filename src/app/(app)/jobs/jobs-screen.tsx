@@ -166,7 +166,7 @@ export function JobsScreen({
         }
       />
       {arbeitsagenturNote && <ArbeitsagenturNote accepted={false} onAccept={acceptArbeitsagentur} className="mx-10 mb-5 max-w-[760px]" />}
-      <div className="flex flex-col gap-3 px-10 pb-4">
+      <div className="flex flex-col gap-3 px-10 max-md:px-4 pb-4">
         {sources.length > 0 ? (
           <SourceBar
             label="Search"
@@ -314,7 +314,7 @@ function LibraryBar({
     ...searches.flatMap((day) => day.searches.map((search) => ({ value: search.id, label: `${describeSearch(search.query, countryName(search.query.country), search.source)} · ${day.day} ${search.time}` }))),
   ];
   return (
-    <div className="flex flex-col gap-2 border-b border-line px-10">
+    <div className="flex flex-col gap-2 border-b border-line px-10 max-md:px-4">
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
         <ListingTabs label="Where they stand" current={filters.tab === "archive" ? "archive" : filters.show} tabs={tabs} />
         <div className="flex flex-wrap items-center gap-3 pb-2">

@@ -26,7 +26,7 @@ export const listingSplit = "flex flex-wrap items-start pb-16 lg:min-h-[360px] l
 /** The 600 px list (E32-1), scrolling on its own from `lg`. */
 export const listingList = "relative flex w-full min-w-0 flex-col border-line lg:w-[min(600px,48%)] lg:flex-none lg:overflow-y-auto lg:border-r lg:pb-16";
 /** The preview, scrolling on its own from `lg`. */
-export const listingPreview = "relative flex w-full min-w-0 flex-col gap-5 px-10 py-7 max-lg:order-first lg:w-auto lg:flex-1 lg:overflow-y-auto";
+export const listingPreview = "relative flex w-full min-w-0 flex-col gap-5 px-10 py-7 max-lg:order-first lg:w-auto lg:flex-1 lg:overflow-y-auto max-md:px-4";
 
 /** Where the list comes from: an icon, its query as chips, a note, Edit and the main action; Edit opens `editor` in place. */
 export function SourceBar({

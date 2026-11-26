@@ -33,7 +33,7 @@ function CertificationForm({
   const set = (change: Partial<CertificationItem>) => onChange({ ...entry, ...change });
 
   return (
-    <div className="grid grid-cols-2 gap-[18px]" onBlur={flush}>
+    <div className="grid grid-cols-2 gap-[18px] max-md:flex max-md:flex-col" onBlur={flush}>
       <Input
         className="col-span-2"
         label="Certification"

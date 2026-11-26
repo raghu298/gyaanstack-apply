@@ -25,7 +25,7 @@ const DOTS: Record<SectionTone, { className: string; label: string }> = {
  */
 function SettingsNav({ section, status }: { section: SettingsPage; status: SettingsStatus }) {
   return (
-    <nav aria-label="Settings sections" className="flex w-full flex-col gap-4 lg:w-[300px] lg:flex-none">
+    <nav aria-label="Settings sections" className="flex w-full flex-col gap-4 max-md:hidden lg:w-[300px] lg:flex-none">
       <Link
         href={settingsSectionHref("overview")}
         aria-current={section === "overview" ? "page" : undefined}
@@ -81,9 +81,9 @@ export function SettingsScreen({ section, status, aside, children }: { section: 
         actions={<SavedIndicator status={saves.status} savedAt={saves.savedAt} />}
       />
       {section === "overview" ? (
-        <div className="px-10 pb-20">{children}</div>
+        <div className="px-10 max-md:px-4 pb-20">{children}</div>
       ) : (
-        <div className="flex flex-wrap items-start gap-x-10 gap-y-8 px-10 pb-20 lg:flex-nowrap">
+        <div className="flex flex-wrap items-start gap-x-10 gap-y-8 px-10 max-md:px-4 pb-20 lg:flex-nowrap">
           <SettingsNav section={section} status={status} />
           {/* The column on the right sits beside the section only where both have room; below that, under it. */}
           <div className="flex min-w-0 flex-1 flex-wrap items-start gap-x-10 gap-y-8 min-[1500px]:flex-nowrap">

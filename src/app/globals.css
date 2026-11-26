@@ -269,3 +269,13 @@
 @utility h-panel {
   height: calc(100dvh - 9px);
 }
+
+/* On a phone every text field is 16px, so iOS Safari doesn't zoom in when one
+   gets focus. Outside the layers, so it wins over the utilities' sizes. */
+@media (width < 48rem) {
+  input:not([type="checkbox"], [type="radio"], [type="range"]),
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}

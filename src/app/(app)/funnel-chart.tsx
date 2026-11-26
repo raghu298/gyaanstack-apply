@@ -183,7 +183,7 @@ export function FunnelChart({ funnel }: { funnel: readonly FunnelStep[] }) {
   if (sent === 0) {
     return (
       <div className="relative overflow-x-auto">
-        <div className="min-w-[760px]">{labels}</div>
+        <div className="min-w-[760px] max-md:min-w-[540px]">{labels}</div>
       </div>
     );
   }
@@ -235,7 +235,7 @@ export function FunnelChart({ funnel }: { funnel: readonly FunnelStep[] }) {
   return (
     <div className="flex flex-col gap-5">
       <div className="relative overflow-x-auto">
-        <div className="min-w-[760px] pb-1">
+        <div className="min-w-[760px] pb-1 max-md:min-w-[540px]">
           {labels}
           {/* The picture; the labels above and the table below have the same numbers for screen readers and keyboards. */}
           <div className="relative" style={{ height }}>

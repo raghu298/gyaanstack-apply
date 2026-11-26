@@ -58,8 +58,8 @@ export function Dashboard({
   const thisWeek = figures.needsYou.filter((item) => item.soon).length;
   return (
     <>
-      <header className="-mx-px bg-paper pt-2">
-        <div className="flex flex-col gap-1 rounded-t-panel border border-b-0 border-line-card bg-surface px-12 pt-7">
+      <header className="-mx-px bg-paper pt-2 max-md:mx-0 max-md:pt-0">
+        <div className="flex flex-col gap-1 rounded-t-panel border border-b-0 border-line-card bg-surface px-12 pt-7 max-md:rounded-none max-md:border-x-0 max-md:px-4 max-md:pt-5">
           {note !== undefined && note !== "hidden" && (
             <div className="pb-6">
               <DailyNote initial={note} />
@@ -78,7 +78,7 @@ export function Dashboard({
         </div>
       </header>
 
-      <div className="@container px-12 pt-7 pb-[72px]">
+      <div className="@container px-12 pt-7 pb-[72px] max-md:px-4 max-md:pt-5">
         <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 @min-[1500px]:grid-cols-[minmax(0,1fr)_580px]">
           {empty ? (
             <Welcome />
@@ -122,7 +122,7 @@ function Funnel({ figures }: { figures: DashboardFigures }) {
   const { funnel, sent, heardBackPercent, reachedInterview } = figures;
   const offers = funnel.find((step) => step.stage === "OFFER")?.count ?? 0;
   return (
-    <section aria-labelledby="funnel-heading" className={`${card} gap-6 p-7`}>
+    <section aria-labelledby="funnel-heading" className={`${card} gap-6 p-7 max-md:p-5`}>
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <div className="flex flex-col gap-1">
           <h2 id="funnel-heading" className="font-serif text-section">
@@ -130,7 +130,8 @@ function Funnel({ figures }: { figures: DashboardFigures }) {
           </h2>
           <p className="text-control text-muted">How far each application you&apos;ve sent has made it, and where the ones that stopped are now.</p>
         </div>
-        <dl className="flex gap-7">
+        {/* Four across on a phone too, each figure in a quarter of the card. */}
+        <dl className="flex gap-7 max-md:grid max-md:w-full max-md:grid-cols-4 max-md:gap-3">
           <Figure value={String(sent)} label="sent" />
           <Figure value={heardBackPercent === null ? "None yet" : `${heardBackPercent}%`} label="heard back" />
           <Figure value={String(reachedInterview)} label="reached interview" />
@@ -155,7 +156,7 @@ function Figure({ value, label }: { value: string; label: string }) {
 function WhereThingsStand({ byStatus }: { byStatus: Record<ApplicationStatus, number> }) {
   const present = STATUSES.filter(({ value }) => byStatus[value] > 0);
   return (
-    <section aria-labelledby="standing-heading" className={`${card} gap-[18px] px-7 py-[26px]`}>
+    <section aria-labelledby="standing-heading" className={`${card} gap-[18px] px-7 py-[26px] max-md:px-5`}>
       <div className="flex items-baseline justify-between gap-3">
         <h2 id="standing-heading" className="text-[15px] font-medium">
           Where things stand
@@ -213,5 +214,5 @@ function Welcome() {
 }
 
 function Panel({ children }: { children: ReactNode }) {
-  return <div className={`${card} items-start gap-3 p-7`}>{children}</div>;
+  return <div className={`${card} items-start gap-3 p-7 max-md:p-5`}>{children}</div>;
 }

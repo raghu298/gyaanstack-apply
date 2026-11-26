@@ -156,7 +156,8 @@ export function Board({
     >
       {/* Relative, so screen-reader-only text inside is clipped with the rest
           instead of widening the page. */}
-      <div className="relative min-h-0 flex-1 overflow-x-auto overflow-y-hidden px-10 pt-1.5 pb-5">
+      {/* On a phone, one column at a time, snapping as you swipe. */}
+      <div className="relative min-h-0 flex-1 overflow-x-auto overflow-y-hidden px-10 pt-1.5 pb-5 max-md:snap-x max-md:snap-mandatory max-md:scroll-px-4 max-md:px-4">
         <div className="flex h-full min-w-full items-stretch gap-3">
           {statuses.map((status) => {
             const cards = orderedColumn(rows, status);
@@ -248,7 +249,7 @@ function Column({
       aria-current={picked ? "true" : undefined}
       style={picked && !dropping ? { outlineColor: statusInfo(status).color } : undefined}
       className={cn(
-        "flex min-h-0 min-w-[212px] flex-[1_1_0px] flex-col gap-2.5 rounded-panel p-3 outline-[1.5px] -outline-offset-2 motion-safe:transition-colors",
+        "flex min-h-0 min-w-[212px] flex-[1_1_0px] flex-col gap-2.5 rounded-panel p-3 max-md:min-w-[84vw] max-md:snap-start outline-[1.5px] -outline-offset-2 motion-safe:transition-colors",
         dropping ? "bg-selected outline-dashed outline-line-strong" : picked ? "bg-selected outline-solid" : "bg-track outline-transparent",
       )}
     >

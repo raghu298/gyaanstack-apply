@@ -1169,7 +1169,8 @@ export function ApplicationView({
         }
       />
 
-      <div className="flex min-h-0 flex-1">
+      {/* On a phone the fit rail is a strip above the document. */}
+      <div className="flex min-h-0 flex-1 max-md:flex-col">
       <FitColumn match={match} open={fitOpen} onOpenChange={setFitOpen}>
         {application.status === "OFFER" && !showFit ? (
           <OfferPanel

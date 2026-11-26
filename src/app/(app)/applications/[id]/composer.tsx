@@ -79,6 +79,11 @@ export function Composer({
   above?: ReactNode;
 }) {
   const [draft, setDraft] = useState("");
+  // On a phone the composer folds to one button, so it doesn't sit on the document.
+  // A new focus request (e.g. "Ask AI" on a section) opens it again.
+  const [opened, setOpened] = useState(false);
+  const [hiddenAt, setHiddenAt] = useState(focusRequest);
+  const phoneOpen = opened || focusRequest > hiddenAt;
   const input = useRef<HTMLTextAreaElement>(null);
   const shown = canChange ? mode : "ask";
   const chips = shown === "ask" ? askSuggestions(status) : suggestions;
@@ -96,8 +101,18 @@ export function Composer({
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-5 z-20 flex justify-center px-4 @max-[780px]/page:fixed @max-[780px]/page:bottom-3">
       <div className="pointer-events-auto flex w-full max-w-[760px] flex-col gap-2.5">
-        {above}
-        <section aria-label="Composer" className="flex flex-col gap-2.5 rounded-[16px] border border-line-strong bg-card py-3 pr-3 pl-4 shadow-menu">
+        {!phoneOpen && (
+          <button
+            type="button"
+            onClick={() => setOpened(true)}
+            className="ml-auto flex min-h-11 items-center gap-2 rounded-full border border-line-strong bg-card px-4 text-sm font-medium text-ink shadow-menu md:hidden"
+          >
+            <Sparkles size={15} aria-hidden="true" />
+            {shown === "ask" ? "Ask" : "Ask for a change"}
+          </button>
+        )}
+        <div className={cn("contents", !phoneOpen && "max-md:hidden")}>{above}</div>
+        <section aria-label="Composer" className={cn("flex flex-col gap-2.5 rounded-[16px] border border-line-strong bg-card py-3 pr-3 pl-4 shadow-menu", !phoneOpen && "max-md:hidden")}>
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div className="flex min-w-0 flex-1 flex-wrap gap-1.5">
               {!aiReady ? (
@@ -166,6 +181,12 @@ export function Composer({
               Send
             </Button>
           </div>
+          <button type="button" onClick={() => {
+              setOpened(false);
+              setHiddenAt(focusRequest);
+            }} className="self-end py-1 text-meta text-muted underline-offset-2 hover:underline md:hidden">
+            Hide
+          </button>
         </section>
       </div>
     </div>

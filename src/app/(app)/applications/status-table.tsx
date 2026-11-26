@@ -82,7 +82,7 @@ export function StatusTable({ status, rows, onMove }: { status: ColumnStatus; ro
   const ordered = dueFirst(status, rows);
   return (
     // Relative, so screen-reader-only text is clipped with the table.
-    <div className="relative mx-10 mb-16 overflow-x-auto rounded-panel border border-line-card bg-card">
+    <div className="relative mx-10 mb-16 overflow-x-auto rounded-panel border border-line-card bg-card max-md:mx-4">
       <table className="w-full min-w-[820px] table-fixed border-collapse text-left">
         <thead>
           <tr className="border-b border-line text-label text-muted">

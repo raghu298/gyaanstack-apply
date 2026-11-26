@@ -31,7 +31,7 @@ export function UsageScreen({
         description="The tokens each kind of AI request used, as your AI provider and Jev counted them. Input is what GyaanStack Apply sent, output what came back, thinking included."
       />
       <PeriodFilter period={period} path="/usage" remember={false}>
-        <PeriodScoped className="flex max-w-[960px] flex-col gap-3 px-10 pb-[72px]">
+        <PeriodScoped className="flex max-w-[960px] flex-col gap-3 px-10 max-md:px-4 pb-[72px]">
           <div className="relative overflow-x-auto rounded-panel border border-line-card bg-card">
             <table className="w-full min-w-[640px] border-collapse text-left">
               <caption className="sr-only">Tokens by task, {within}</caption>

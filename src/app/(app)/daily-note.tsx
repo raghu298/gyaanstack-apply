@@ -51,7 +51,7 @@ export function DailyNote({ initial }: { initial: DailyNoteValue }) {
   const noneLeft = note?.rewritesLeft === 0;
 
   return (
-    <section aria-label="Today's note" aria-busy={!note || pending || undefined} className="-mx-12 flex items-start gap-6 border-b border-line px-12 pb-6">
+    <section aria-label="Today's note" aria-busy={!note || pending || undefined} className="-mx-12 flex items-start gap-6 border-b border-line px-12 pb-6 max-md:-mx-4 max-md:gap-3 max-md:px-4">
       <figure className="flex min-w-0 flex-1 flex-col gap-2">
         <blockquote
           className={cn(

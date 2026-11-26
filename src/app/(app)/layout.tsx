@@ -79,7 +79,7 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
   const statusCounts = new Map(byStatus.map((group) => [group.status, group._count._all]));
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen max-md:flex-col">
       <a
         href="#main"
         className="fixed top-3 left-3 z-50 -translate-y-[200%] rounded-control bg-primary px-4 py-2.5 text-sm font-medium text-on-primary hover:text-on-primary focus:translate-y-0"
@@ -102,14 +102,14 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
         profiles={{ profiles, openId: settings.openProfileId ?? "", expanded: parseOpen(jar.get(PROFILES_COOKIE)?.value) }}
         colorScheme={parseColorScheme(jar.get(COLOR_SCHEME_COOKIE)?.value)}
       />
-      {/* The screen sits in a white panel inset from the shell. Each screen
+      {/* The screen sits in a white panel inset from the shell (edge to edge on phones). Each screen
           starts with its page bar (PageHeader or PageBar), which draws the
           panel's top edge and stays in view. */}
-      <div className="flex min-w-0 flex-1 flex-col bg-paper px-2 pb-2">
+      <div className="flex min-w-0 flex-1 flex-col bg-paper px-2 pb-2 max-md:px-0 max-md:pb-0">
         <main
           id="main"
           tabIndex={-1}
-          className="relative flex min-w-0 flex-1 flex-col rounded-b-panel border border-t-0 border-line-card bg-surface focus:outline-none"
+          className="relative flex min-w-0 flex-1 flex-col rounded-b-panel border border-t-0 border-line-card bg-surface focus:outline-none max-md:rounded-none max-md:border-0"
         >
           {/* The portals the user added, known to every screen (E23-3). */}
           <PortalRegistry portals={installed.map((portal) => portalInfo(portal.config))}>{children}</PortalRegistry>

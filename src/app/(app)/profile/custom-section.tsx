@@ -55,7 +55,7 @@ function CustomItemForm({
   );
 
   return (
-    <div className="grid grid-cols-2 gap-[18px]" onBlur={flush}>
+    <div className="grid grid-cols-2 gap-[18px] max-md:flex max-md:flex-col" onBlur={flush}>
       {format === "ENTRIES" && (
         <>
           <Input className="col-span-2" label="Title" placeholder="Mentor" value={entry.title} onChange={(event) => set({ title: event.target.value })} autoFocus={autoFocus} />

@@ -73,7 +73,7 @@ export function InboxScreen({
           )
         }
       />
-      <div className="flex max-w-[860px] flex-col gap-5 px-10 pb-[72px]">
+      <div className="flex max-w-[860px] flex-col gap-5 px-10 max-md:px-4 pb-[72px]">
         {connected && !aiReady && (
           // #358: said once for the page, not only when a mail is opened.
           <p role="note" className="rounded-card bg-warning-surface px-4 py-3 text-meta text-pretty text-warning">

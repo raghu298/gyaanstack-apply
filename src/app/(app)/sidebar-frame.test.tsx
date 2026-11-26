@@ -41,6 +41,33 @@ function renderSidebar(initialCollapsed = false, initialApplicationCollapsed?: b
 }
 
 describe("SidebarFrame", () => {
+  it("opens as a drawer from the phone menu, at full width, and closes on Escape, the backdrop or a new page", async () => {
+    const { rerender } = renderSidebar(true);
+    const menu = screen.getByRole("button", { name: "Open menu" });
+    expect(menu).toHaveAttribute("aria-expanded", "false");
+
+    await userEvent.click(menu);
+    expect(menu).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("complementary")).not.toHaveAttribute("data-collapsed");
+    expect(screen.getByRole("button", { name: "Close menu" })).toHaveFocus();
+    expect(document.body.style.overflow).toBe("hidden");
+
+    await userEvent.keyboard("{Escape}");
+    expect(menu).toHaveAttribute("aria-expanded", "false");
+    expect(screen.getByRole("complementary")).toHaveAttribute("data-collapsed", "true");
+    expect(document.body.style.overflow).toBe("");
+
+    await userEvent.click(menu);
+    pathname = "/applications";
+    rerender(
+      <SidebarFrame initialCollapsed brand={<span>GyaanStack Apply</span>}>
+        <NavLinks />
+        <ThemeToggle />
+      </SidebarFrame>,
+    );
+    expect(menu).toHaveAttribute("aria-expanded", "false");
+  });
+
   it("collapses to icons, keeps every link named, and remembers it", async () => {
     renderSidebar();
     await userEvent.click(screen.getByRole("button", { name: "Collapse sidebar" }));

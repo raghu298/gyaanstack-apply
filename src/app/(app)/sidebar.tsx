@@ -59,6 +59,15 @@ export function Sidebar({
     <SidebarFrame
       initialCollapsed={collapsed}
       initialApplicationCollapsed={applicationCollapsed}
+      phoneActions={
+        <Link
+          href="/new?fresh=1"
+          aria-label="New application"
+          className="grid size-9 shrink-0 place-items-center rounded-control bg-primary text-on-primary shadow-cta hover:bg-primary-hover hover:text-on-primary"
+        >
+          <Plus size={18} aria-hidden="true" />
+        </Link>
+      }
       brand={
         <>
           <BrandMark className="size-[30px]" />

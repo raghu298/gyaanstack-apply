@@ -30,7 +30,8 @@ export function TabsList({ variant = "underline", className, ...props }: TabsLis
           variant === "underline"
             ? "flex-wrap gap-x-7 border-b border-line"
             : variant === "pills"
-              ? "flex-wrap rounded-[9px] bg-track p-[3px]"
+              ? // One row on a phone, scrolling sideways instead of wrapping.
+              "flex-wrap rounded-[9px] bg-track p-[3px] max-md:max-w-full max-md:flex-nowrap max-md:overflow-x-auto"
               : "rounded-[10px] bg-track p-[3px]",
           className,
         )}
@@ -46,7 +47,7 @@ const triggerClassNames: Record<TabsVariant, string> = {
   segmented:
     "flex-1 rounded-control p-2 text-control font-medium data-[state=active]:bg-card data-[state=active]:shadow-raised",
   pills:
-    "flex items-center gap-1.5 rounded-[7px] px-[13px] py-1.5 text-[13.5px] text-document hover:text-ink data-[state=active]:bg-card data-[state=active]:font-medium data-[state=active]:text-ink data-[state=active]:shadow-raised",
+    "flex items-center gap-1.5 rounded-[7px] px-[13px] py-1.5 text-[13.5px] max-md:shrink-0 max-md:whitespace-nowrap text-document hover:text-ink data-[state=active]:bg-card data-[state=active]:font-medium data-[state=active]:text-ink data-[state=active]:shadow-raised",
 };
 
 export function TabsTrigger({ className, ...props }: TabsPrimitive.TabsTriggerProps) {

@@ -2,7 +2,7 @@
 
 A self-hosted job-application copilot: one profile, a tailored resume and cover letter for each job, and a daily run that finds Senior GenAI roles and applies by email with your own resume.
 
-Version 1.0.0. Part of [GyaanStack](https://gyaanstack.com).
+Version 1.1.0. Part of [GyaanStack](https://gyaanstack.com): [GenAI learning library](https://gyaanstack.com) · [Articles](https://blog.gyaanstack.com) · [Videos](https://videos.gyaanstack.com) · [Website](https://apply.gyaanstack.com)
 
 [![Download for Windows or Linux](https://img.shields.io/badge/Download-Windows%20%7C%20Linux-0b7a6b?style=for-the-badge)](https://github.com/raghu298/gyaanstack-apply/releases/latest)
 [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-aigyaanstack-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/aigyaanstack)
@@ -22,6 +22,7 @@ GyaanStack Apply runs on your own computer or server, with one password and your
 - **Gmail and Calendar (optional).** Send an application from your own address with the PDFs attached, see employer replies next to each application, and keep interviews in step with Google Calendar. Nothing is sent without your confirmation in the app.
 - **Track.** A board and a table of every application from draft to offer, and a dashboard with your funnel and upcoming interviews.
 - **Claude connector (optional).** An MCP server, so Claude can search jobs, read your profile and save drafts. It never sends or deletes anything.
+- **Phones and laptops.** Every screen works on a phone: a top bar with a slide-out menu, a board you swipe one column at a time, and stacked editors.
 - **Your data.** Export and import everything as one file, plus nightly backups.
 
 ## What GyaanStack Apply adds

@@ -85,7 +85,7 @@ export function BasicsSection({
   const age = ageOn(basics.dob, new Date());
 
   return (
-    <Card className="grid grid-cols-2 gap-x-[18px] gap-y-5">
+    <Card className="grid grid-cols-2 gap-x-[18px] gap-y-5 max-md:flex max-md:flex-col">
       <PhotoField photo={photo} onChange={onPhotoChange} />
       {FIELDS.map(({ field, label, wide, placeholder, type, autoComplete }) => (
         <Input

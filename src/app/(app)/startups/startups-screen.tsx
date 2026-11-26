@@ -88,7 +88,7 @@ export function StartupsScreen({ filter, list, lastRefresh, refreshJobId, city, 
         title="Startups"
         description={`Startups that are hiring ${country ? `in ${country}, or remotely from there` : "where you live, or remotely"}: from YC startups' job posts and Hacker News' “Who is hiring?”. You write to each one yourself.`}
       />
-      <div className="flex flex-col gap-3 px-10 pb-4">
+      <div className="flex flex-col gap-3 px-10 max-md:px-4 pb-4">
         <SourceBar
           label="Sources"
           icon={<Rocket size={16} />}
@@ -127,7 +127,7 @@ export function StartupsScreen({ filter, list, lastRefresh, refreshJobId, city, 
 
       {lastRefresh && (
         <>
-          <div className="flex flex-col gap-2 border-b border-line px-10">
+          <div className="flex flex-col gap-2 border-b border-line px-10 max-md:px-4">
             <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
               <ListingTabs
                 label="Where they stand"
