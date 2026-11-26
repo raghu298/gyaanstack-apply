@@ -17,7 +17,7 @@
 <meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script>try{var t=localStorage.getItem("gsa-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
-<link rel="stylesheet" href="/style.css?v=3">
+<link rel="stylesheet" href="/style.css?v=4">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -29,6 +29,7 @@
     <a href="#privacy">Privacy</a>
     <a href="#install">Install</a>
     <a href="#setup">Set up for you</a>
+    <a href="#support">Support</a>
   </nav>
   <div class="top-right">
     <button class="theme-btn" type="button" aria-label="Switch colour theme" title="Switch colour theme">
@@ -39,7 +40,7 @@
     <a class="btn btn-main btn-sm show-phone" href="https://github.com/raghu298/gyaanstack-apply/releases/latest">Download</a>
     <details class="menu show-phone"><summary aria-label="Menu"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></summary>
       <div class="menu-list">
-        <a href="#how">How it works</a><a href="#features">Features</a><a href="#privacy">Privacy</a><a href="#install">Install</a><a href="#setup">Set up for you</a><a href="https://github.com/raghu298/gyaanstack-apply">GitHub</a><a href="https://buymeacoffee.com/aigyaanstack">Buy me a coffee</a>
+        <a href="#how">How it works</a><a href="#features">Features</a><a href="#privacy">Privacy</a><a href="#install">Install</a><a href="#setup">Set up for you</a><a href="https://github.com/raghu298/gyaanstack-apply">GitHub</a><a href="#faq">Questions</a><a href="#support">Support: UPI or card</a>
       </div>
     </details>
   </div>
@@ -197,12 +198,44 @@
     </div>
     <div class="btns"><a class="btn btn-main" href="mailto:hello@gyaanstack.com?subject=GyaanStack%20Apply%20setup">Email hello@gyaanstack.com</a></div>
   </div>
-  <div class="cta" style="padding:56px 0 0;border:0">
+</div></section>
+
+<section id="faq"><div class="wrap">
+  <p class="eyebrow">Questions</p>
+  <h2>Before you install.</h2>
+  <div class="faq">
+    <details><summary>Is it really free?</summary><p>Yes. The app is free software under the GNU AGPL-3.0. You pay only for the AI model if you pick a hosted one. With Ollama or LM Studio it costs nothing to run.</p></details>
+    <details><summary>Which AI model should I use?</summary><p>A hosted model such as Claude gives the best drafts. A local model through Ollama or LM Studio keeps everything on your computer. You can switch at any time in Settings.</p></details>
+    <details><summary>Does it work on a Mac?</summary><p>Yes, from source: install Node.js 24, Yarn and PostgreSQL, then follow the <a href="https://github.com/raghu298/gyaanstack-apply#quick-start">install guide</a>. The desktop app is for Windows and Linux.</p></details>
+    <details><summary>Will it make things up on my resume?</summary><p>No. It writes only from what your profile holds. A requirement you do not meet is shown as a gap, not added to the resume.</p></details>
+    <details><summary>Does it apply to jobs without asking me?</summary><p>No. The job agent finds and scores postings and can prepare drafts. Nothing is sent until you confirm it.</p></details>
+  </div>
+</div></section>
+
+<section id="support"><div class="wrap">
+  <div class="cta">
     <h2>Free to use. Support it if it helps.</h2>
-    <p class="lead">If the app saves you hours of rewriting resumes, a coffee keeps it going. Preparing for GenAI roles? GyaanStack has a study library and interview prep.</p>
-    <div class="btns">
-      <a class="btn btn-main" href="https://buymeacoffee.com/aigyaanstack">Buy me a coffee</a>
-      <a class="btn btn-line" href="https://gyaanstack.com">Learn GenAI on GyaanStack</a>
+    <p class="lead">If the app saves you hours of rewriting resumes, a small payment keeps it going. Any amount helps.</p>
+  </div>
+  <div class="pay">
+    <div class="card pay-card">
+      <p class="eyebrow">In India: pay by UPI</p>
+      <h3>GPay, PhonePe, Paytm or any UPI app</h3>
+      <div class="pay-upi">
+        <img class="qr" src="/img/upi-qr.svg" width="164" height="164" alt="UPI QR code for raghunath298@ybl">
+        <div>
+          <p class="muted">Scan the code, or on your phone tap Pay with UPI and pick your app.</p>
+          <p class="upi-id"><code>raghunath298@ybl</code><button type="button" class="copy" data-copy="raghunath298@ybl">Copy</button></p>
+          <a class="btn btn-main" href="upi://pay?pa=raghunath298@ybl&amp;pn=GyaanStack&amp;cu=INR&amp;tn=Support%20GyaanStack">Pay with UPI</a>
+        </div>
+      </div>
+    </div>
+    <div class="card pay-card">
+      <p class="eyebrow">Anywhere: card</p>
+      <h3>Buy me a coffee</h3>
+      <p class="muted">Card, Apple Pay or Google Pay in your own currency. One coffee is about ₹280 or $3.</p>
+      <div class="btns"><a class="btn btn-line" href="https://buymeacoffee.com/aigyaanstack">Buy me a coffee</a></div>
+      <p class="muted pay-learn">Preparing for GenAI roles? <a href="https://gyaanstack.com">GyaanStack</a> has a study library and interview prep.</p>
     </div>
   </div>
 </div></section>
@@ -220,7 +253,7 @@
         <li><a href="https://github.com/raghu298/gyaanstack-apply">Source code</a></li>
         <li><a href="https://github.com/raghu298/gyaanstack-apply#quick-start">Install guide</a></li>
         <li><a href="https://github.com/raghu298/gyaanstack-apply/issues">Report a problem</a></li>
-        <li><a href="https://buymeacoffee.com/aigyaanstack">Buy me a coffee</a></li>
+        <li><a href="#support">Support (UPI or card)</a></li>
       </ul>
     </div>
     <div>
@@ -247,6 +280,10 @@
   tabs.forEach(function(t){t.addEventListener("click",function(){
     tabs.forEach(function(x){x.setAttribute("aria-selected",x===t?"true":"false")});
     shots.forEach(function(s){s.classList.toggle("is-on",s.dataset.shot===t.dataset.shot)});
+  })});
+  document.querySelectorAll(".copy").forEach(function(b){b.addEventListener("click",function(){
+    var done=function(){b.textContent="Copied";setTimeout(function(){b.textContent="Copy"},1600)};
+    if(navigator.clipboard)navigator.clipboard.writeText(b.dataset.copy).then(done,function(){});
   })});
   document.querySelectorAll(".menu-list a").forEach(function(a){a.addEventListener("click",function(){var d=a.closest("details");if(d)d.open=false})});
 })();
