@@ -47,7 +47,7 @@ const triggerClassNames: Record<TabsVariant, string> = {
   segmented:
     "flex-1 rounded-control p-2 text-control font-medium data-[state=active]:bg-card data-[state=active]:shadow-raised",
   pills:
-    "flex items-center gap-1.5 rounded-[7px] px-[13px] py-1.5 text-[13.5px] max-md:shrink-0 max-md:whitespace-nowrap text-document hover:text-ink data-[state=active]:bg-card data-[state=active]:font-medium data-[state=active]:text-ink data-[state=active]:shadow-raised",
+    "flex items-center gap-1.5 rounded-[7px] px-[13px] py-1.5 text-[13.5px] max-md:shrink-0 max-md:whitespace-nowrap max-md:px-2 text-document hover:text-ink data-[state=active]:bg-card data-[state=active]:font-medium data-[state=active]:text-ink data-[state=active]:shadow-raised",
 };
 
 export function TabsTrigger({ className, ...props }: TabsPrimitive.TabsTriggerProps) {
