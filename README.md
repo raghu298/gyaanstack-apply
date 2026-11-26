@@ -8,6 +8,8 @@ Version 1.0.0. Part of [GyaanStack](https://gyaanstack.com).
 [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-aigyaanstack-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/aigyaanstack)
 [![Website](https://img.shields.io/badge/Website-apply.gyaanstack.com-0a192f?style=for-the-badge)](https://apply.gyaanstack.com)
 
+<a href="https://buymeacoffee.com/aigyaanstack"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy me a coffee" height="50"></a>
+
 ## What it does
 
 GyaanStack Apply runs on your own computer or server, with one password and your data in your own PostgreSQL database (or an SQLite file). You pick the AI model: a local one through Ollama or LM Studio, or a hosted one (Anthropic, Mistral or any OpenAI-compatible API).
@@ -107,7 +109,11 @@ How to run it safely and report a problem: [SECURITY.md](SECURITY.md).
 
 ## Support
 
-If GyaanStack Apply helps your job search, you can [buy me a coffee](https://buymeacoffee.com/aigyaanstack). To learn GenAI and prepare for interviews, see [GyaanStack](https://gyaanstack.com).
+GyaanStack Apply is free. If it saves you hours of rewriting resumes, a coffee pays for hosting and keeps new features coming.
+
+<a href="https://buymeacoffee.com/aigyaanstack"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy me a coffee" height="50"></a>
+
+To learn GenAI and prepare for interviews, see [GyaanStack](https://gyaanstack.com).
 
 ## Licence
 
