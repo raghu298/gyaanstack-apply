@@ -129,7 +129,7 @@ h3{font-size:18px;line-height:1.35;margin:0 0 6px;letter-spacing:-.01em}
 .frame-bar{display:flex;align-items:center;gap:6px;padding:9px 12px;border-bottom:1px solid #1d3354;font-size:11.5px;color:#7d8aa9}
 .frame-bar span{width:9px;height:9px;border-radius:50%;background:#27406a}
 .frame-bar b{font-weight:400;font-family:var(--fmono);margin-left:8px}
-.shots{position:relative;aspect-ratio:1600/1120}
+.shots{position:relative;aspect-ratio:1600/1000}
 .shot{position:absolute;inset:0;opacity:0;transition:opacity .25s ease;pointer-events:none}
 .shot.is-on{opacity:1;pointer-events:auto}
 .shot img{width:100%;height:100%;object-fit:cover;object-position:left top}
