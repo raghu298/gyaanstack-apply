@@ -75,7 +75,8 @@ export function ApplicationHeader({
         </div>
       </div>
       {tabs}
-      <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>
+      {/* On a phone the actions wrap onto a second line instead of widening the page. */}
+      <div className="flex shrink-0 flex-wrap items-center gap-2 max-md:min-w-0 max-md:max-w-full max-md:shrink">{actions}</div>
     </PageBar>
   );
 }
