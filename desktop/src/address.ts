@@ -31,7 +31,7 @@ export function isGyaanStackHealth(body: unknown): boolean {
   return (status === "ok" || status === "unavailable") && typeof version === "string" && (db === "ok" || db === "unreachable");
 }
 
-export type ServerCheck = "ok" | "unreachable" | "certificate" | "not-dossier";
+export type ServerCheck = "ok" | "unreachable" | "certificate" | "not-gyaanstack";
 
 const TIMEOUT_MS = 10_000;
 
@@ -44,8 +44,8 @@ export async function checkServer(origin: string, fetchImpl: typeof fetch): Prom
     return /ERR_CERT|ERR_SSL/i.test(String(error)) ? "certificate" : "unreachable";
   }
   try {
-    return isGyaanStackHealth(await response.json()) ? "ok" : "not-dossier";
+    return isGyaanStackHealth(await response.json()) ? "ok" : "not-gyaanstack";
   } catch {
-    return "not-dossier";
+    return "not-gyaanstack";
   }
 }

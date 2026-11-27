@@ -38,7 +38,7 @@ vi.mock("@/hooks/use-job", async () => {
 describe("Your data (E10-4)", () => {
   it("exports everything, the API key only when ticked", async () => {
     const user = userEvent.setup();
-    render(<DataSection jobRetentionHours={24} hasApiKey exportName="dossier-export-2026-09-28.json" backups={backups} />);
+    render(<DataSection jobRetentionHours={24} hasApiKey exportName="gyaanstack-apply-export-2026-09-28.json" backups={backups} />);
     expect(screen.getByRole("heading", { name: "Export everything" })).toBeInTheDocument();
     const exportLink = screen.getByRole("link", { name: "Export" });
     expect(exportLink).toHaveAttribute("href", "/api/export");
@@ -49,7 +49,7 @@ describe("Your data (E10-4)", () => {
   });
 
   it("doesn't offer the API key without one", () => {
-    render(<DataSection jobRetentionHours={24} hasApiKey={false} exportName="dossier-export-2026-09-28.json" backups={backups} />);
+    render(<DataSection jobRetentionHours={24} hasApiKey={false} exportName="gyaanstack-apply-export-2026-09-28.json" backups={backups} />);
     expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
   });
 });
@@ -83,7 +83,7 @@ describe("Download all PDFs (E10-5)", () => {
 
 describe("Import (E10-6)", () => {
   const summary = { applications: 8, roles: 3, skills: 12, themes: 1, notes: 0 };
-  const file = new File(["{}"], "dossier-export-2026-09-27.json", { type: "application/json" });
+  const file = new File(["{}"], "gyaanstack-apply-export-2026-09-27.json", { type: "application/json" });
 
   it("says what the file replaces, then backs up and imports", async () => {
     const user = userEvent.setup();

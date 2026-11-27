@@ -1,6 +1,6 @@
 "use client";
 
-import { useOptimistic, useState, useTransition } from "react";
+import { useMemo, useOptimistic, useState, useSyncExternalStore, useTransition } from "react";
 
 import { toast, toastResult } from "@/components/toast";
 import { Button } from "@/components/ui/button";
@@ -89,7 +89,7 @@ export function InterviewPanel({
 
       <GettingReady applicationId={applicationId} round={current} preparing={preparing} aiReady={aiReady} onPrepare={onPrepare} />
 
-      {practice.length > 0 && <Practice questions={practice} />}
+      {practice.length > 0 && <Practice applicationId={applicationId} questions={practice} />}
 
       <section aria-labelledby="so-far" className="flex flex-col gap-1.5 border-t border-line pt-4">
         <h2 id="so-far" className="pb-1 text-[12.5px] text-muted">
@@ -247,24 +247,83 @@ function GettingReady({
   );
 }
 
-/** "Practise on GyaanStack" (GS-1): questions from the GyaanStack bank that fit this job; the model answers are on gyaanstack.com. */
-function Practice({ questions }: { questions: PracticeQuestion[] }) {
+const PRACTISED_EVENT = "gs-practised";
+const subscribePractised = (onChange: () => void) => {
+  window.addEventListener("storage", onChange);
+  window.addEventListener(PRACTISED_EVENT, onChange);
+  return () => {
+    window.removeEventListener("storage", onChange);
+    window.removeEventListener(PRACTISED_EVENT, onChange);
+  };
+};
+const readPractised = (key: string) => {
+  try {
+    return localStorage.getItem(key) ?? "[]";
+  } catch {
+    return "[]";
+  }
+};
+
+/**
+ * "Practise on GyaanStack" (GS-1, v2): questions from the GyaanStack bank that fit this job,
+ * grouped by topic, each one ticked off when practised. Ticks stay in this browser, per
+ * application; the model answers are on gyaanstack.com.
+ */
+export function Practice({ applicationId, questions }: { applicationId: string; questions: PracticeQuestion[] }) {
+  const key = `gs-practised:${applicationId}`;
+  const raw = useSyncExternalStore(subscribePractised, () => readPractised(key), () => "[]");
+  const done = useMemo<string[]>(() => {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return [];
+    }
+  }, [raw]);
+  const toggle = (id: string, on: boolean) => {
+    const next = on ? [...new Set([...done, id])] : done.filter((other) => other !== id);
+    try {
+      localStorage.setItem(key, JSON.stringify(next));
+    } catch {
+      // Private mode or storage off: nothing to keep.
+    }
+    window.dispatchEvent(new Event(PRACTISED_EVENT));
+  };
+  const groups = [...new Set(questions.map((question) => question.set))].map((set) => ({ set, items: questions.filter((question) => question.set === set) }));
+  const practised = questions.filter((question) => done.includes(question.id)).length;
   return (
-    <section aria-labelledby="practice" className="flex flex-col gap-2.5 border-t border-line pt-4">
-      <h2 id="practice" className="text-[12.5px] text-muted">
-        Practise on GyaanStack
-      </h2>
-      <p className="text-meta text-muted">Questions from the GyaanStack interview bank that fit this job.</p>
-      <ol className="flex list-decimal flex-col gap-2 pl-5 text-[13.5px]">
-        {questions.map((question) => (
-          <li key={question.id}>
-            {question.question}
-            <span className="block text-meta text-muted">
-              {question.set} · {question.level}
-            </span>
-          </li>
-        ))}
-      </ol>
+    <section aria-labelledby="practice" className="flex flex-col gap-3 border-t border-line pt-4">
+      <div className="flex items-baseline justify-between gap-2">
+        <h2 id="practice" className="text-[12.5px] text-muted">
+          Practise on GyaanStack
+        </h2>
+        <span className="text-meta text-muted tabular-nums">
+          {practised} of {questions.length} practised
+        </span>
+      </div>
+      <div className="h-1.5 overflow-hidden rounded-full bg-track" aria-hidden="true">
+        <div className="h-full rounded-full bg-primary transition-[width]" style={{ width: `${questions.length ? (100 * practised) / questions.length : 0}%` }} />
+      </div>
+      {groups.map(({ set, items }) => (
+        <div key={set} className="flex flex-col gap-1.5">
+          <h3 className="text-meta font-medium text-ink">{set}</h3>
+          <ul className="flex flex-col gap-1.5">
+            {items.map((question) => (
+              <li key={question.id}>
+                <Checkbox
+                  checked={done.includes(question.id)}
+                  onChange={(event) => toggle(question.id, event.target.checked)}
+                  label={
+                    <span className={done.includes(question.id) ? "text-muted line-through" : ""}>
+                      {question.question}
+                      <span className="block text-meta text-muted no-underline">{question.level}</span>
+                    </span>
+                  }
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
       <a
         href={PRACTICE_URL}
         target="_blank"

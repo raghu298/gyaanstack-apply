@@ -75,7 +75,7 @@ import {
   stopWritingApplication,
 } from "./actions";
 import { FitColumn, FitPanel, type GapAnswer } from "./fit-column";
-import { InterviewPanel, type InterviewView } from "./interview-panel";
+import { InterviewPanel, Practice, type InterviewView } from "./interview-panel";
 import type { PracticeQuestion } from "@/lib/interview-bank/match";
 import { MessageDraftCard } from "./message-draft-card";
 import { OfferPanel, type OfferView } from "./offer-panel";
@@ -1237,6 +1237,11 @@ export function ApplicationView({
             used: writingApp ? usedInResume : undefined,
           }}
         />
+        {application.status === "SCREENING" && practice.length > 0 && (
+          <div className="mt-5">
+            <Practice applicationId={application.id} questions={practice} />
+          </div>
+        )}
         </>
         )}
       </FitColumn>

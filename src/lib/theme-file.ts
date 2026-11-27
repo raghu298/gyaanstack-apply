@@ -76,10 +76,10 @@ export function themeFile(theme: ThemeData) {
   };
 }
 
-/** "Quiet green.dossier-theme.json": the name, without characters files can't have. */
+/** "Quiet green.gyaanstack-theme.json": the name, without characters files can't have. */
 export function themeFileName(theme: Pick<ThemeData, "name">): string {
   const name = theme.name.replace(/[\\/:*?"<>|\u0000-\u001f]+/g, " ").replace(/\s+/g, " ").trim() || "Theme";
-  return `${name}.dossier-theme.json`;
+  return `${name}.gyaanstack-theme.json`;
 }
 
 /** A theme file's contents, checked, or why it can't be used, in plain words. */

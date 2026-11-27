@@ -168,7 +168,7 @@ export default async function ApplicationPage({ params, searchParams }: PageProp
         prep: readJson(prepSchema, round.prep),
       }))}
       practice={
-        status === "INTERVIEW"
+        status === "INTERVIEW" || status === "SCREENING"
           ? practiceFor({ title: role || title, requirements: extracted?.requirements ?? [], posting: application.postingText })
           : []
       }

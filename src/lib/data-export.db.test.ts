@@ -110,7 +110,7 @@ describe("buildExport (E10-4)", () => {
   });
 
   it("names the file after the day", () => {
-    expect(exportFileName(new Date(2026, 8, 7, 23))).toBe("dossier-export-2026-09-07.json");
+    expect(exportFileName(new Date(2026, 8, 7, 23))).toBe("gyaanstack-apply-export-2026-09-07.json");
   });
 
   it("refuses files it doesn't know", () => {

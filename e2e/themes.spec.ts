@@ -42,7 +42,7 @@ test("duplicates, exports, deletes and imports a theme", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Editorial theme, in use" })).toBeFocused();
 
   await page.locator("input[type=file][accept*=json]").setInputFiles({
-    name: "theme.dossier-theme.json",
+    name: "theme.gyaanstack-theme.json",
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(exported)),
   });

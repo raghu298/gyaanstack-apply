@@ -533,10 +533,10 @@ export const exportSchema = z.object({
 });
 export type GyaanStackExport = z.infer<typeof exportSchema>;
 
-/** "dossier-export-2026-09-28.json", dated in the server's time zone. */
+/** "gyaanstack-apply-export-2026-09-28.json", dated in the server's time zone. */
 export function exportFileName(now = new Date()): string {
   const pad = (value: number) => String(value).padStart(2, "0");
-  return `dossier-export-${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}.json`;
+  return `gyaanstack-apply-export-${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}.json`;
 }
 
 /**

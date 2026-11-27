@@ -61,8 +61,8 @@ describe("theme files (E5-7)", () => {
   });
 
   it("names the file after the theme, safely", () => {
-    expect(themeFileName({ name: "Quiet green" })).toBe("Quiet green.dossier-theme.json");
-    expect(themeFileName({ name: 'A/B: "best"' })).toBe("A B best.dossier-theme.json");
-    expect(themeFileName({ name: "   " })).toBe("Theme.dossier-theme.json");
+    expect(themeFileName({ name: "Quiet green" })).toBe("Quiet green.gyaanstack-theme.json");
+    expect(themeFileName({ name: 'A/B: "best"' })).toBe("A B best.gyaanstack-theme.json");
+    expect(themeFileName({ name: "   " })).toBe("Theme.gyaanstack-theme.json");
   });
 });
