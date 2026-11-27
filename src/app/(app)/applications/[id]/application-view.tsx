@@ -76,6 +76,7 @@ import {
 } from "./actions";
 import { FitColumn, FitPanel, type GapAnswer } from "./fit-column";
 import { InterviewPanel, type InterviewView } from "./interview-panel";
+import type { PracticeQuestion } from "@/lib/interview-bank/match";
 import { MessageDraftCard } from "./message-draft-card";
 import { OfferPanel, type OfferView } from "./offer-panel";
 import { FitSummary } from "./fit-summary";
@@ -202,6 +203,8 @@ export type ApplicationViewProps = {
   knownGaps?: string[];
   /** Its interview rounds (E30-6). */
   interviews?: InterviewView[];
+  /** GyaanStack interview questions that fit this job (GS-1). */
+  practice?: PracticeQuestion[];
   /** The next interview is in Google Calendar. */
   inCalendar?: boolean;
   /** "Getting ready" being written, e.g. since before a reload. */
@@ -288,6 +291,7 @@ export function ApplicationView({
   facts: factsAtLoad,
   knownGaps = [],
   interviews = [],
+  practice = [],
   inCalendar = false,
   preparing = null,
   offer = null,
@@ -1187,6 +1191,7 @@ export function ApplicationView({
           <InterviewPanel
             applicationId={application.id}
             interviews={interviews}
+            practice={practice}
             timeZone={timeZone}
             inCalendar={inCalendar}
             preparing={prepareJob !== null}

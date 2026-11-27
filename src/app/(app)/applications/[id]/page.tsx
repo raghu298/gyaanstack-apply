@@ -35,6 +35,7 @@ import { userTimeZone } from "@/lib/time-zone";
 import { ApplicationView } from "./application-view";
 import { metaLine, roleLabel } from "./meta";
 import { tabFrom } from "./tabs";
+import { practiceFor } from "@/lib/interview-bank/match";
 import { listProfiles } from "@/lib/profiles";
 import { loadHistory } from "@/lib/application-history-data";
 
@@ -166,6 +167,11 @@ export default async function ApplicationPage({ params, searchParams }: PageProp
         notes: round.notes,
         prep: readJson(prepSchema, round.prep),
       }))}
+      practice={
+        status === "INTERVIEW"
+          ? practiceFor({ title: role || title, requirements: extracted?.requirements ?? [], posting: application.postingText })
+          : []
+      }
       inCalendar={application.interviewEventId !== null}
       preparing={prepareJobs.at(-1)?.id ?? null}
       offer={

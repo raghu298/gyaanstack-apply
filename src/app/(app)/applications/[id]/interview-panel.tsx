@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDateTime, formatShortDay } from "@/lib/dates";
+import { PRACTICE_URL, type PracticeQuestion } from "@/lib/interview-bank/match";
 import { upcomingRound, type Prep } from "@/lib/interview-rounds";
 
 import { addInterviewRound, tickPrep, updateInterview } from "./actions";
@@ -42,9 +43,12 @@ export function InterviewPanel({
   onPrepare,
   fitLine,
   onShowFit,
+  practice = [],
 }: {
   applicationId: string;
   interviews: InterviewView[];
+  /** GyaanStack interview questions that fit this job (GS-1). */
+  practice?: PracticeQuestion[];
   timeZone?: string;
   /** The next interview is in Google Calendar. */
   inCalendar: boolean;
@@ -84,6 +88,8 @@ export function InterviewPanel({
       )}
 
       <GettingReady applicationId={applicationId} round={current} preparing={preparing} aiReady={aiReady} onPrepare={onPrepare} />
+
+      {practice.length > 0 && <Practice questions={practice} />}
 
       <section aria-labelledby="so-far" className="flex flex-col gap-1.5 border-t border-line pt-4">
         <h2 id="so-far" className="pb-1 text-[12.5px] text-muted">
@@ -237,6 +243,37 @@ function GettingReady({
           </Button>
         </>
       )}
+    </section>
+  );
+}
+
+/** "Practise on GyaanStack" (GS-1): questions from the GyaanStack bank that fit this job; the model answers are on gyaanstack.com. */
+function Practice({ questions }: { questions: PracticeQuestion[] }) {
+  return (
+    <section aria-labelledby="practice" className="flex flex-col gap-2.5 border-t border-line pt-4">
+      <h2 id="practice" className="text-[12.5px] text-muted">
+        Practise on GyaanStack
+      </h2>
+      <p className="text-meta text-muted">Questions from the GyaanStack interview bank that fit this job.</p>
+      <ol className="flex list-decimal flex-col gap-2 pl-5 text-[13.5px]">
+        {questions.map((question) => (
+          <li key={question.id}>
+            {question.question}
+            <span className="block text-meta text-muted">
+              {question.set} · {question.level}
+            </span>
+          </li>
+        ))}
+      </ol>
+      <a
+        href={PRACTICE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="self-start text-[13.5px] text-link underline-offset-2 hover:underline"
+      >
+        Practise with model answers on GyaanStack <span aria-hidden="true">↗</span>
+        <span className="sr-only"> (opens in a new tab)</span>
+      </a>
     </section>
   );
 }
