@@ -10,7 +10,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: { default: "GyaanStack Apply", template: "%s · GyaanStack Apply" },
-  description: "Your job search, on your server.",
+  description: "Tailored applications and interview prep for GenAI jobs.",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

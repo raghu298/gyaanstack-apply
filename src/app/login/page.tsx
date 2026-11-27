@@ -29,7 +29,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           <BrandMark className="size-10" />
           <div className="flex flex-col">
             <div className="font-serif text-[30px] font-medium tracking-[-0.01em]">GyaanStack Apply</div>
-            <div className="text-sm text-muted">Your job search, on your server</div>
+            <div className="text-sm text-muted">Tailored applications and interview prep</div>
           </div>
         </div>
         {desktop ? (
