@@ -46,7 +46,7 @@ describe("About (E10-9)", () => {
     expect(toggle).toHaveAccessibleDescription("Off. Nothing is sent, and this install's ID is forgotten.");
     await user.click(toggle);
     expect(chooseUsagePing).toHaveBeenLastCalledWith({ send: true });
-    expect(screen.getByText(/only goes once you agree/)).toHaveTextContent("send the ID to dossier.app@pm.me");
+    expect(screen.getByText(/only goes once you agree/)).toHaveTextContent("send the ID to the base app's maintainer (address in Privacy)");
   });
 
   it("says when nobody has answered yet", () => {

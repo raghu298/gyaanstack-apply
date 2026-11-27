@@ -34,7 +34,7 @@ describe("Settings → MCP connector (#221, #281)", () => {
     await user.click(toggle);
     expect(setConnector).toHaveBeenCalledWith({ on: true });
     expect(screen.getByText(ADDRESS)).toBeInTheDocument();
-    expect(screen.getByText(/claude mcp add --transport http dossier https:\/\/dossier\.example\/api\/mcp/)).toBeInTheDocument();
+    expect(screen.getByText(/claude mcp add --transport http gyaanstack-apply https:\/\/dossier\.example\/api\/mcp/)).toBeInTheDocument();
     // A public HTTPS address needs no warning.
     expect(screen.queryByRole("note")).not.toBeInTheDocument();
 

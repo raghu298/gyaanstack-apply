@@ -198,7 +198,7 @@ const answersSchema = z.object({
 export function createGyaanStackServer(origin: string): McpServer {
   const linkTo = (path: string) => `${origin}${path}`;
   const server = new McpServer(
-    { name: "dossier", title: "GyaanStack Apply", version: appVersion },
+    { name: "gyaanstack-apply", title: "GyaanStack Apply", version: appVersion },
     {
       instructions:
         "GyaanStack Apply is the user's own job search app: their profiles (one per kind of job they look for), tailored resumes and cover letters, and every application tracked. " +

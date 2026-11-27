@@ -114,7 +114,7 @@ export function ConnectorSection({
               </li>
             </ol>
             <p className="text-meta text-muted">
-              In Claude&apos;s command-line app: <code className="font-mono text-label">claude mcp add --transport http dossier {address}</code>, then{" "}
+              In Claude&apos;s command-line app: <code className="font-mono text-label">claude mcp add --transport http gyaanstack-apply {address}</code>, then{" "}
               <code className="font-mono text-label">/mcp</code> to sign in.
             </p>
             {!publicHttps && (

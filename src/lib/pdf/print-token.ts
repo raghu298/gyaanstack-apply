@@ -9,7 +9,7 @@ import { deriveKey } from "@/lib/keys";
 // and bound to that one page, sent in a request header so it never shows up
 // in a URL or a log.
 
-export const PRINT_TOKEN_HEADER = "x-dossier-print-token";
+export const PRINT_TOKEN_HEADER = "x-gyaanstack-print-token";
 export const PRINT_TOKEN_LIFETIME_SECONDS = 60;
 
 const AUDIENCE = "dossier-print";

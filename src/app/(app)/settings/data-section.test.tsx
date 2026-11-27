@@ -66,10 +66,10 @@ describe("Download all PDFs (E10-5)", () => {
     expect(screen.getByRole("button", { name: "Zipping…" })).toHaveAttribute("aria-disabled", "true");
     expect(screen.getByRole("status")).toHaveTextContent("Rendered 3 of 12…");
 
-    const result = { file: "f.zip", fileName: "dossier-pdfs-2026-09-28.zip", documents: 12 };
+    const result = { file: "f.zip", fileName: "gyaanstack-apply-pdfs-2026-09-28.zip", documents: 12 };
     act(() => jobs.report?.({ id: "zip-1", type: "zip-pdfs", status: "DONE", step: null, error: null, result }));
-    expect(screen.getByRole("link", { name: "Download dossier-pdfs-2026-09-28.zip" })).toHaveAttribute("href", "/api/downloads/zip-1");
-    expect(toast).toHaveBeenLastCalledWith("dossier-pdfs-2026-09-28.zip is ready.", { action: expect.objectContaining({ label: "Download" }) });
+    expect(screen.getByRole("link", { name: "Download gyaanstack-apply-pdfs-2026-09-28.zip" })).toHaveAttribute("href", "/api/downloads/zip-1");
+    expect(toast).toHaveBeenLastCalledWith("gyaanstack-apply-pdfs-2026-09-28.zip is ready.", { action: expect.objectContaining({ label: "Download" }) });
   });
 
   it("says so when there's nothing to zip", async () => {
@@ -90,7 +90,7 @@ describe("Import (E10-6)", () => {
     const fetch = vi.fn(async (url: string) =>
       url.endsWith("?preview=1")
         ? Response.json({ incoming: summary, current: { ...summary, applications: 10, themes: 0 }, exportedAt: "2026-09-27T10:00:00Z" })
-        : Response.json({ incoming: summary, backup: "dossier-backup-before-import-2026-09-28-120000.json" }),
+        : Response.json({ incoming: summary, backup: "gyaanstack-apply-backup-before-import-2026-09-28-120000.json" }),
     );
     vi.stubGlobal("fetch", fetch);
     try {
@@ -104,7 +104,7 @@ describe("Import (E10-6)", () => {
       );
       await user.click(screen.getByRole("button", { name: "Import and replace" }));
       expect(fetch).toHaveBeenLastCalledWith("/api/import", expect.objectContaining({ method: "POST", body: file }));
-      expect(toast).toHaveBeenLastCalledWith("Imported. Your previous data is backed up as dossier-backup-before-import-2026-09-28-120000.json.");
+      expect(toast).toHaveBeenLastCalledWith("Imported. Your previous data is backed up as gyaanstack-apply-backup-before-import-2026-09-28-120000.json.");
       expect(router.refresh).toHaveBeenCalled();
     } finally {
       vi.unstubAllGlobals();

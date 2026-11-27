@@ -24,8 +24,8 @@ export const downloadsDir = () => path.join(env.GYAANSTACK_DATA_DIR, "downloads"
 const KEEP_MS = 60 * 60 * 1000;
 
 const pad = (value: number) => String(value).padStart(2, "0");
-/** "dossier-pdfs-2026-09-28.zip" */
-const zipFileName = (now: Date) => `dossier-pdfs-${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}.zip`;
+/** "gyaanstack-apply-pdfs-2026-09-28.zip" */
+const zipFileName = (now: Date) => `gyaanstack-apply-pdfs-${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}.zip`;
 
 /** A company as a folder name: no characters a file system refuses. */
 function folderName(company: string): string {

@@ -42,8 +42,8 @@ describe("webhooks (E26-2)", () => {
     expect(JSON.parse(body)).toEqual({ event: "agent.run.finished", title: message.title, text: message.text, link: message.link, at: message.at, data: { newCount: 2 } });
     const headers = new Headers(init.headers);
     const seconds = Math.floor(now.getTime() / 1000);
-    expect(headers.get("x-dossier-signature")).toBe(`t=${seconds},v1=${createHmac("sha256", "whsec_test").update(`${seconds}.${body}`).digest("hex")}`);
-    expect(headers.get("x-dossier-event")).toBe("agent.run.finished");
+    expect(headers.get("x-gyaanstack-signature")).toBe(`t=${seconds},v1=${createHmac("sha256", "whsec_test").update(`${seconds}.${body}`).digest("hex")}`);
+    expect(headers.get("x-gyaanstack-event")).toBe("agent.run.finished");
     expect(webhookSignature("k", "{}", 1)).toMatch(/^t=1,v1=[0-9a-f]{64}$/);
   });
 
@@ -79,9 +79,9 @@ describe("ntfy (E26-2)", () => {
 
 describe("email (E26-2)", () => {
   it("sends the subject, the text and the link through the SMTP server, TLS on 465", async () => {
-    await sendMessage({ type: "EMAIL", name: "Inbox", config: { host: "smtp.example.com", port: 465, user: "me", from: "dossier@example.com", to: "me@example.com" }, secret: "pw" }, message);
+    await sendMessage({ type: "EMAIL", name: "Inbox", config: { host: "smtp.example.com", port: 465, user: "me", from: "apply@example.com", to: "me@example.com" }, secret: "pw" }, message);
     expect(mail.options[0]).toMatchObject({ host: "smtp.example.com", port: 465, secure: true, auth: { user: "me", pass: "pw" } });
-    expect(mail.sent[0]).toMatchObject({ from: "dossier@example.com", to: "me@example.com", subject: message.title, text: `${message.text}\n\n${message.link}` });
+    expect(mail.sent[0]).toMatchObject({ from: "apply@example.com", to: "me@example.com", subject: message.title, text: `${message.text}\n\n${message.link}` });
   });
 
   it("says what went wrong in words", async () => {

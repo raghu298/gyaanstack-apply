@@ -162,7 +162,7 @@ function ChannelForm({ channel, onSaved, onCancel }: { channel: ChannelView | nu
             <Input label="SMTP server" placeholder="smtp.example.com" value={draft.host} onChange={(event) => patch({ host: event.target.value })} />
             <Input label="Port" inputMode="numeric" hint="587 for STARTTLS, 465 for TLS." value={draft.port} onChange={(event) => patch({ port: event.target.value })} />
             <Input label="User" autoComplete="off" value={draft.user} onChange={(event) => patch({ user: event.target.value })} />
-            <Input label="From" type="email" placeholder="dossier@example.com" value={draft.from} onChange={(event) => patch({ from: event.target.value })} />
+            <Input label="From" type="email" placeholder="apply@example.com" value={draft.from} onChange={(event) => patch({ from: event.target.value })} />
             <Input label="To" type="email" placeholder="you@example.com" value={draft.to} onChange={(event) => patch({ to: event.target.value })} />
           </div>
         )}

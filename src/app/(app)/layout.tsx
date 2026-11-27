@@ -65,7 +65,8 @@ export default async function AppLayout({ children }: LayoutProps<"/">) {
   // The portal catalog, when a read is due (E23-2): at most once a day.
   after(readCatalogIfDue);
   const userName = name.trim() || "New user";
-  const announcement = currentAnnouncement(settings);
+  // The base app's notices (Discord, its releases) only show when GYAANSTACK_ANNOUNCEMENTS=on; a feed saved earlier stays hidden.
+  const announcement = process.env.GYAANSTACK_ANNOUNCEMENTS === "on" ? currentAnnouncement(settings) : null;
   // Replies waiting for an answer or a link, on the Inbox item; the job agent's finds and drafts on its own (E16-6).
   const [waiting, agent, installed, byStatus, profiles] = await Promise.all([
     inboxCount().catch(() => 0),

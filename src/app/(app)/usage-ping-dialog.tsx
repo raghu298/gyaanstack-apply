@@ -62,9 +62,7 @@ export function UsagePingDialog({ host }: { host: string }) {
               <p>
                 Nothing is sent unless you choose Send usage ping. You can change your mind in Settings → About, or with GYAANSTACK_TELEMETRY on the
                 server. To have what was kept deleted, send the install ID to{" "}
-                <a href="mailto:dossier.app@pm.me" className={LINK}>
-                  dossier.app@pm.me
-                </a>
+                the base app&apos;s maintainer (address in Privacy)
                 .{" "}
                 <a href={USAGE_PING_PRIVACY_URL} target="_blank" rel="noopener noreferrer" className={LINK}>
                   More in Privacy <span className="sr-only">(opens in a new tab)</span>

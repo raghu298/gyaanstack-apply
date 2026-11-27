@@ -23,7 +23,7 @@ describe("UsagePingDialog (#172)", () => {
     expect(dialog).toHaveTextContent("It goes to the base app's maintainer, on the project's own server in Germany.");
     expect(dialog).toHaveTextContent("deleted after a year");
     expect(dialog).toHaveTextContent("Settings → About, or with GYAANSTACK_TELEMETRY");
-    expect(screen.getByRole("link", { name: "dossier.app@pm.me" })).toHaveAttribute("href", "mailto:dossier.app@pm.me");
+    expect(screen.getByText(/send the install ID to the base app.s maintainer \(address in Privacy\)/)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /More in Privacy/ })).toHaveAttribute("href", "https://github.com/raghu298/gyaanstack-apply/blob/main/PRIVACY.md#usage-ping");
     expect(dialog).not.toHaveTextContent(/Cloudflare/);
   });
