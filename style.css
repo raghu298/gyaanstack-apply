@@ -352,7 +352,7 @@ h3{font-size:18px;line-height:1.35;margin:0 0 6px;letter-spacing:-.01em}
 .tour-frame{border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);background:var(--card)}
 .tour .shots{aspect-ratio:1600/1000}
 .small-note{font-size:13px;color:var(--muted);margin:10px 0 0}
-.feat-list{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:36px}
+.feat-list{display:grid;grid-template-columns:repeat(5,1fr);gap:22px;margin-top:36px}
 .feat-list h3{font-size:16px;margin:0 0 6px;color:var(--white)}
 .feat-list p{margin:0;font-size:14.5px;color:var(--muted);line-height:1.6}
 .flow-steps{list-style:none;counter-reset:s;padding:0;margin:0;display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative}
