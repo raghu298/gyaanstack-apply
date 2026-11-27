@@ -45,15 +45,20 @@ GyaanStack's own additions:
 You need Node.js 24, Yarn and PostgreSQL. These steps run the app natively, without Docker.
 
 1. Create a database and a user for it, for example `gyaanstack` / `gyaanstack`.
-2. Copy `.env.example` to `.env` and fill in the required values:
-   - `DATABASE_URL`, your PostgreSQL connection string
-   - `GYAANSTACK_SECRET`, at least 32 random characters (`openssl rand -base64 32`)
-   - `GYAANSTACK_PASSWORD`, a hash of your sign-in password, made with `yarn hash-password`
-3. Install, set up the database and build:
+2. Install the dependencies (this also makes `yarn hash-password` work for the next step):
 
    ```sh
    yarn install
-   npx prisma generate
+   ```
+
+3. Copy `.env.example` to `.env` and fill in the required values:
+   - `DATABASE_URL`, your PostgreSQL connection string. Edit the existing `DATABASE_URL=` line rather than adding a second one, so the file has only one.
+   - `GYAANSTACK_SECRET`, at least 32 random characters (`openssl rand -base64 32`)
+   - `GYAANSTACK_PASSWORD`, a hash of your sign-in password, made with `yarn hash-password`. Put it in single quotes, because the hash contains `$` signs.
+4. Set up the database and build:
+
+   ```sh
+   yarn generate
    npx prisma migrate deploy
    npx prisma db seed
    yarn build
@@ -62,13 +67,15 @@ You need Node.js 24, Yarn and PostgreSQL. These steps run the app natively, with
    cp .env .next/standalone/.env
    ```
 
-4. Start it, reachable only from your own computer:
+   `yarn generate` makes both database clients (PostgreSQL and SQLite) the app loads; `npx prisma generate` alone makes only the first, and the seed then fails with "Cannot find module '@/generated/prisma-sqlite/client'".
+
+5. Start it, reachable only from your own computer:
 
    ```sh
    HOSTNAME=127.0.0.1 PORT=3000 node .next/standalone/server.js
    ```
 
-5. Open http://localhost:3000, sign in, and pick an AI model in **Settings → AI provider**.
+6. Open http://localhost:3000, sign in, and pick an AI model in **Settings → AI provider**.
 
 Every setting is an environment variable starting with `GYAANSTACK_`; `.env.example` lists them all.
 
