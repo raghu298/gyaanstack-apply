@@ -13,63 +13,63 @@
    * meets WCAG AA (4.5:1) on every surface in both schemes.
    */
 
-  /* Surfaces: a beige shell, like the sidebar, around the screen's panel. */
-  --color-paper: light-dark(#eeebe4, #1a1917); /* shell around the panel, side columns, disabled fields */
-  --color-sidebar: light-dark(#eeebe4, #1a1917);
-  --color-surface: light-dark(#f4f2ed, #22201d); /* the panel each screen sits in */
-  --color-card: light-dark(#fbfaf7, #2a2825);
-  --color-canvas: light-dark(#e8e5de, #141311); /* behind document previews */
-  --color-input: light-dark(#ffffff, #1e1c1a); /* inputs */
+  /* Surfaces: GyaanStack's cool blue-grey (light) and navy (dark), around the screen's panel. */
+  --color-paper: light-dark(#e9eef4, #071121); /* shell around the panel, side columns, disabled fields */
+  --color-sidebar: light-dark(#e9eef4, #071121);
+  --color-surface: light-dark(#f4f7fa, #0a192f); /* the panel each screen sits in */
+  --color-card: light-dark(#ffffff, #0f213d);
+  --color-canvas: light-dark(#dfe6ee, #050d1a); /* behind document previews */
+  --color-input: light-dark(#ffffff, #0c1b33); /* inputs */
 
   /* Text */
-  --color-ink: light-dark(#1d1c1a, #f0ede7);
-  --color-document: light-dark(#2b2a27, #e5e1d9); /* posting text, set like a document */
+  --color-ink: light-dark(#0e1626, #e6f1ff);
+  --color-document: light-dark(#1f2a3b, #ccd6f6); /* posting text, set like a document */
   /* Secondary text: hints, labels, metadata. It passes on every surface
      and on the hover tints, but not on a selected item over the shell
      (4.3:1 in the light scheme): use ink there. */
-  --color-muted: light-dark(#69655d, #aaa59c);
+  --color-muted: light-dark(#52607a, #93a1c4);
   /* Disabled and decorative only: never for text people need to read. */
-  --color-faint: light-dark(#a29d94, #6e6961);
+  --color-faint: light-dark(#97a3b6, #5a6a8a);
 
   /* Primary actions: near-black, and near-white in the dark scheme, with
      on-primary text at 4.5:1 or more. primary-text is for text and icons
      marking a choice, e.g. a selected chip's label. */
-  --color-primary: light-dark(#222222, #ebe7df);
-  --color-primary-hover: light-dark(#3a3936, #ffffff);
-  --color-on-primary: light-dark(#fbfaf7, #1d1c1a);
-  --color-primary-text: light-dark(#1d1c1a, #f0ede7);
+  --color-primary: light-dark(#0b7a6b, #64ffda);
+  --color-primary-hover: light-dark(#08665a, #8dffe6);
+  --color-on-primary: light-dark(#ffffff, #04201a);
+  --color-primary-text: light-dark(#0a6b5e, #64ffda);
   /* Focus rings: 3:1 against every surface. */
-  --color-focus: light-dark(#1d1c1a, #f0ede7);
+  --color-focus: light-dark(#0b7a6b, #64ffda);
 
   /* Toasts and tooltips: a dark chip, a little raised in the dark scheme. */
-  --color-inverse: light-dark(#222222, #3b3834);
-  --color-on-inverse: light-dark(#fbfaf7, #f0ede7);
-  --color-on-inverse-muted: light-dark(rgb(251 250 247 / 0.78), rgb(240 237 231 / 0.82));
+  --color-inverse: light-dark(#0a192f, #1b3358);
+  --color-on-inverse: light-dark(#eef4ff, #eef4ff);
+  --color-on-inverse-muted: light-dark(rgb(238 244 255 / 0.78), rgb(238 244 255 / 0.82));
   /* The project's notices, on that dark chip in both schemes. */
   --color-notice-security: #fca5a5;
   --color-notice-important: #fbbf24;
 
   /* Lines */
-  --color-line: light-dark(rgb(29 28 26 / 0.08), rgb(240 237 231 / 0.07)); /* dividers */
-  --color-line-card: light-dark(rgb(29 28 26 / 0.1), rgb(240 237 231 / 0.1));
-  --color-line-field: light-dark(rgb(29 28 26 / 0.14), rgb(240 237 231 / 0.14)); /* chips and other controls named by their text */
+  --color-line: light-dark(rgb(14 22 38 / 0.08), rgb(204 214 246 / 0.08)); /* dividers */
+  --color-line-card: light-dark(rgb(14 22 38 / 0.1), rgb(204 214 246 / 0.1));
+  --color-line-field: light-dark(rgb(14 22 38 / 0.14), rgb(204 214 246 / 0.15)); /* chips and other controls named by their text */
   /* Text fields, whose border is what shows they're fields: 3:1 on every surface (E11-3, WCAG 1.4.11). */
-  --color-line-input: light-dark(rgb(29 28 26 / 0.5), rgb(240 237 231 / 0.42));
-  --color-line-control: light-dark(rgb(29 28 26 / 0.16), rgb(240 237 231 / 0.14)); /* secondary buttons */
-  --color-line-popover: light-dark(rgb(29 28 26 / 0.12), rgb(240 237 231 / 0.12)); /* menus */
-  --color-line-strong: light-dark(rgb(29 28 26 / 0.2), rgb(240 237 231 / 0.24)); /* upcoming steps */
+  --color-line-input: light-dark(rgb(14 22 38 / 0.5), rgb(204 214 246 / 0.42));
+  --color-line-control: light-dark(rgb(14 22 38 / 0.16), rgb(204 214 246 / 0.16)); /* secondary buttons */
+  --color-line-popover: light-dark(rgb(14 22 38 / 0.12), rgb(204 214 246 / 0.14)); /* menus */
+  --color-line-strong: light-dark(rgb(14 22 38 / 0.2), rgb(204 214 246 / 0.26)); /* upcoming steps */
 
   /* Links that act inside a panel, such as a gap's "Add to profile" (E30-3): 4.5:1 on cards and the surface. */
   --color-link: light-dark(oklch(0.47 0.12 250), oklch(0.74 0.09 250));
 
   /* Tints for hover, selection and tracks */
-  --color-hover: light-dark(rgb(29 28 26 / 0.05), rgb(240 237 231 / 0.07));
-  --color-selected: light-dark(rgb(29 28 26 / 0.07), rgb(240 237 231 / 0.1));
+  --color-hover: light-dark(rgb(14 22 38 / 0.05), rgb(204 214 246 / 0.07));
+  --color-selected: light-dark(rgb(11 122 107 / 0.09), rgb(100 255 218 / 0.10));
   /* The sidebar's current page: a raised card in the light scheme, a lighter chip with a line in the dark one. */
-  --color-nav-active: light-dark(#fbfaf7, #2f2d29);
-  --color-line-nav-active: light-dark(transparent, rgb(240 237 231 / 0.1));
-  --color-track: light-dark(rgb(29 28 26 / 0.06), rgb(240 237 231 / 0.08));
-  --color-toggle-off: light-dark(rgb(29 28 26 / 0.5), rgb(240 237 231 / 0.42)); /* 3:1, like text fields */
+  --color-nav-active: light-dark(#ffffff, #13294a);
+  --color-line-nav-active: light-dark(transparent, rgb(100 255 218 / 0.22));
+  --color-track: light-dark(rgb(14 22 38 / 0.06), rgb(204 214 246 / 0.08));
+  --color-toggle-off: light-dark(rgb(14 22 38 / 0.5), rgb(204 214 246 / 0.42)); /* 3:1, like text fields */
 
   /* Feedback. error and danger are for text; danger-fill is behind white text. */
   --color-danger: light-dark(#9a4a3a, #f87171); /* remove / destructive text */

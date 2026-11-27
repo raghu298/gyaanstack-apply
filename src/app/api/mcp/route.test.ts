@@ -94,7 +94,7 @@ describe("the Claude connector at /api/mcp (#221)", () => {
       token,
     );
     expect(init.status).toBe(200);
-    expect(await answer(init)).toMatchObject({ result: { serverInfo: { name: "dossier" } } });
+    expect(await answer(init)).toMatchObject({ result: { serverInfo: { name: "gyaanstack-apply" } } });
 
     const { result } = await answer(await call({ jsonrpc: "2.0", id: 2, method: "tools/list" }, token));
     expect(result?.tools?.map((entry) => entry.name).sort()).toEqual([
